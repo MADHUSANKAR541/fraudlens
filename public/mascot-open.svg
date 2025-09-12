@@ -1,0 +1,59 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Body -->
+  <ellipse cx="60" cy="80" rx="35" ry="25" fill="url(#bodyGradient)" />
+  
+  <!-- Head -->
+  <circle cx="60" cy="50" r="30" fill="url(#headGradient)" />
+  
+  <!-- Ears -->
+  <ellipse cx="45" cy="30" rx="8" ry="12" fill="url(#earGradient)" transform="rotate(-15 45 30)" />
+  <ellipse cx="75" cy="30" rx="8" ry="12" fill="url(#earGradient)" transform="rotate(15 75 30)" />
+  
+  <!-- Inner Ears -->
+  <ellipse cx="45" cy="32" rx="4" ry="6" fill="#FF8A80" transform="rotate(-15 45 32)" />
+  <ellipse cx="75" cy="32" rx="4" ry="6" fill="#FF8A80" transform="rotate(15 75 32)" />
+  
+  <!-- Eyes (Open) -->
+  <ellipse cx="50" cy="45" rx="6" ry="8" fill="white" />
+  <circle cx="50" cy="45" r="4" fill="#0D1B2A" />
+  <circle cx="51" cy="43" r="1.5" fill="white" />
+  
+  <ellipse cx="70" cy="45" rx="6" ry="8" fill="white" />
+  <circle cx="70" cy="45" r="4" fill="#0D1B2A" />
+  <circle cx="71" cy="43" r="1.5" fill="white" />
+  
+  <!-- Nose -->
+  <polygon points="60,50 55,55 65,55" fill="#FF8A80" />
+  
+  <!-- Mouth -->
+  <path d="M 55 60 Q 60 65 65 60" stroke="#0D1B2A" stroke-width="2" fill="none" stroke-linecap="round" />
+  
+  <!-- Whiskers -->
+  <line x1="35" y1="55" x2="45" y2="55" stroke="#0D1B2A" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="35" y1="60" x2="45" y2="58" stroke="#0D1B2A" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="75" y1="55" x2="85" y2="55" stroke="#0D1B2A" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="75" y1="60" x2="85" y2="58" stroke="#0D1B2A" stroke-width="1.5" stroke-linecap="round" />
+  
+  <!-- Tail -->
+  <path d="M 25 80 Q 15 70 20 60 Q 25 50 30 60 Q 35 70 25 80" fill="url(#tailGradient)" />
+  
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#42A5F5" />
+      <stop offset="100%" stop-color="#1565C0" />
+    </linearGradient>
+    <linearGradient id="headGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#42A5F5" />
+      <stop offset="100%" stop-color="#0D47A1" />
+    </linearGradient>
+    <linearGradient id="earGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#42A5F5" />
+      <stop offset="100%" stop-color="#0D47A1" />
+    </linearGradient>
+    <linearGradient id="tailGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#42A5F5" />
+      <stop offset="100%" stop-color="#1565C0" />
+    </linearGradient>
+  </defs>
+</svg>
