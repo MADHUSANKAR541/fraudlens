@@ -8,7 +8,7 @@ class WakeUpService {
   private readonly WAKE_UP_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
   constructor() {
-    this.backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+    this.backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://npn-kh8l.onrender.com';
   }
 
   // Wake up the backend by calling the /docs endpoint

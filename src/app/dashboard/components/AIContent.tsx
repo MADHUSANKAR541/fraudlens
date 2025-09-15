@@ -50,7 +50,7 @@ export default function AIContent() {
         console.log('🔄 Backend not available, attempting to reconnect...');
         const isHealthy = await backendService.checkHealth();
         if (!isHealthy) {
-          throw new Error('Backend is not available. Please ensure the FastAPI server is running on http://localhost:8000');
+          throw new Error('Backend is not available. Please ensure the API is reachable at https://npn-kh8l.onrender.com');
         }
       }
 

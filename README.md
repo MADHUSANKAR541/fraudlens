@@ -56,6 +56,38 @@ FraudLens is a comprehensive fraud detection solution that combines state-of-the
 4. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
+### Authentication (NextAuth + Supabase Postgres)
+
+This app uses NextAuth with Prisma Adapter and Supabase Postgres.
+
+Add these to your `.env.local`:
+
+```env
+# NextAuth
+AUTH_SECRET=replace-with-a-random-string
+NEXTAUTH_URL=http://localhost:3000
+
+# Prisma (Supabase Postgres)
+# Get from Supabase → Project Settings → Database → Connection string (URI)
+DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@db.YOUR_PROJECT_REF.supabase.co:5432/postgres?pgbouncer=true&connection_limit=1
+DIRECT_URL=postgresql://postgres:YOUR_PASSWORD@aws-0-YOUR_REGION.pooler.supabase.com:6543/postgres
+```
+
+Generate a strong `AUTH_SECRET`:
+
+```bash
+node -e "console.log(crypto.randomBytes(32).toString('hex'))"
+```
+
+Initialize the database schema:
+
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+Protected routes: `/dashboard` are enforced by middleware.
+
 ### Backend Setup
 
 1. **Navigate to backend directory**

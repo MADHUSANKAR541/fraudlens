@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { signOut, useSession } from 'next-auth/react';
 import { 
   Shield, 
   BarChart3,
@@ -22,6 +23,7 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children, currentPage, onPageChange }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { data: session } = useSession();
 
   const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3, href: '/dashboard' },
@@ -116,6 +118,19 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
               <button className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
                 <Grid3X3 className="w-4 h-4 text-gray-500" />
                 <span className="text-sm">Manage</span>
+              </button>
+              <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                <Plus className="w-4 h-4" />
+                <span className="text-sm">Add Widget</span>
+              </button>
+              <div className="ml-2 text-sm text-gray-600 hidden sm:block">
+                {session?.user?.email}
+              </div>
+              <button
+                className="px-3 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm"
+                onClick={() => signOut({ callbackUrl: '/auth/login' })}
+              >
+                Sign out
               </button>
             </div>
           </div>
