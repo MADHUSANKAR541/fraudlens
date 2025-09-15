@@ -340,7 +340,7 @@ const SignupPage: React.FC = () => {
                     ) : (
                       <>
                         <div className="w-4 h-4 border-2 border-red-500 rounded-full" />
-                        <span className="text-xs text-red-600">Passwords don't match</span>
+                        <span className="text-xs text-red-600">Passwords don&apos;t match</span>
                       </>
                     )}
                   </motion.div>
