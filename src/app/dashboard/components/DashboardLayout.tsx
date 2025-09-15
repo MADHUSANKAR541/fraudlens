@@ -7,11 +7,11 @@ import {
   Download,
   Users,
   Menu,
-  Plus,
   Compass,
   Calendar,
   Grid3X3,
-  Star
+  Star,
+  X
 } from 'lucide-react';
 
 interface DashboardLayoutProps {
@@ -35,12 +35,20 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
       {/* Sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-40 w-64 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 bg-white border-r border-gray-200`}>
         <div className="h-full p-6 flex flex-col gap-6">
+          {/* Close button (mobile only) */}
+          <button 
+            className="lg:hidden self-end p-2 rounded-lg hover:bg-gray-100"
+            aria-label="Close sidebar"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <X className="w-5 h-5 text-gray-700" />
+          </button>
           {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
               <div className="w-4 h-4 bg-white rounded-sm opacity-90"></div>
             </div>
-            <span className="font-bold text-xl text-gray-900">NeuroBank</span>
+            <span className="font-bold text-xl text-gray-900">FraudLens</span>
           </div>
 
           {/* User Welcome Card */}
@@ -63,7 +71,7 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
               return (
                 <button
                   key={item.id}
-                  onClick={() => onPageChange(item.id)}
+                  onClick={() => { onPageChange(item.id); setSidebarOpen(false); }}
                   className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-colors ${
                     isActive 
                       ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' 
@@ -82,7 +90,7 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
             <button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl p-4 flex items-center gap-3 hover:from-blue-700 hover:to-blue-800 transition-all">
               <Star className="w-5 h-5" />
               <div className="text-left">
-                <div className="font-semibold">NeuroBank Pro</div>
+                <div className="font-semibold">FraudLens Pro</div>
                 <div className="text-sm opacity-90">AI-powered finance</div>
               </div>
             </button>
@@ -109,16 +117,12 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
                 <Grid3X3 className="w-4 h-4 text-gray-500" />
                 <span className="text-sm">Manage</span>
               </button>
-              <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
-                <Plus className="w-4 h-4" />
-                <span className="text-sm">Add Widget</span>
-              </button>
             </div>
           </div>
         </header>
 
         {/* Content */}
-        <main className="p-6">
+        <main className="p-4 sm:p-6 max-w-7xl mx-auto">
           {children}
         </main>
       </div>

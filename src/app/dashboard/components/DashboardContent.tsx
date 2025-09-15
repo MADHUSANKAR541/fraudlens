@@ -107,8 +107,8 @@ export default function DashboardContent() {
     <div className="space-y-6">
       {/* Data Source Indicator */}
       <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 gap-2">
             <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium ${
               sessionInfo?.dataSource === 'real' 
                 ? 'bg-green-100 text-green-800' 
@@ -161,7 +161,7 @@ export default function DashboardContent() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {/* AI Insights */}
       <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm relative">
         <div className="flex items-center justify-between mb-4">
@@ -189,7 +189,7 @@ export default function DashboardContent() {
       </div>
 
       {/* Fraud Rate Overview */}
-      <div className="lg:col-span-2 rounded-2xl bg-white border border-gray-200 p-6 shadow-sm relative">
+      <div className="md:col-span-2 lg:col-span-2 rounded-2xl bg-white border border-gray-200 p-6 shadow-sm relative">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center">
             <Shield className="w-5 h-5 text-red-600 mr-2" />
@@ -300,7 +300,7 @@ export default function DashboardContent() {
       </div>
 
       {/* Feature Importance */}
-      <div className="lg:col-span-2 rounded-2xl bg-white border border-gray-200 p-6 shadow-sm relative">
+      <div className="md:col-span-2 lg:col-span-2 rounded-2xl bg-white border border-gray-200 p-6 shadow-sm relative">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center">
             <Target className="w-5 h-5 text-purple-600 mr-2" />
