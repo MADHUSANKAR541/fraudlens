@@ -57,7 +57,7 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
                 <Users className="w-5 h-5 text-gray-600" />
               </div>
             </div>
-            <div className="text-xs text-gray-500 mb-1">{new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+            <div className="text-xs text-gray-500 mb-1">{new Intl.DateTimeFormat('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).format(new Date())}</div>
             <div className="text-lg font-bold text-gray-900">Welcome back, {session?.user?.name || session?.user?.email || 'there'}!</div>
           </div>
 

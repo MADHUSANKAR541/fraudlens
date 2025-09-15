@@ -55,18 +55,8 @@ export default function DashboardContent() {
   };
 
   useEffect(() => {
-    const loadModelMetrics = async () => {
-      try {
-        const modelInfoResult = await backendService.getModelInfo();
-        if (modelInfoResult.success && modelInfoResult.data) {
-          setModelMetrics(modelInfoResult.data.metrics);
-        }
-      } catch (error) {
-        console.warn('Failed to load model metrics from backend, using defaults:', error);
-      }
-    };
-
-    loadModelMetrics();
+    // Disable backend model info call; keep default metrics
+    setModelMetrics(DEFAULT_MODEL_METRICS);
   }, []);
 
   const handleRefreshMockData = async () => {

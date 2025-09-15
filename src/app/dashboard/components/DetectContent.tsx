@@ -76,46 +76,8 @@ export default function DetectContent() {
         const rows = await supabaseUploadService.fetchAll(null);
         const transactions = rows as unknown as TransactionData[];
 
-        if (transactions.length === 0) {
-          setResults([]);
-          setIsLoading(false);
-          return;
-        }
-
-        const analyzed = await backendService.analyzeTransactions(transactions);
-        if (analyzed.success && analyzed.data) {
-          const preds = analyzed.data.predictions;
-          const mapped: FraudResult[] = preds.map((p, idx) => {
-            const t = p.originalData as TransactionData;
-            const riskScore = Math.round((p.riskScore || p.fraudProbability || 0) * 100);
-            const riskLevel: 'low' | 'medium' | 'high' = riskScore >= 70 ? 'high' : riskScore >= 40 ? 'medium' : 'low';
-            return {
-              id: `${idx}`,
-              transactionId: `TX-${idx + 1}`,
-              amount: Number(t?.proposed_credit_limit ?? t?.intended_balcon_amount ?? 0),
-              timestamp: new Date().toISOString(),
-              userId: 'N/A',
-              merchantId: 'N/A',
-              location: 'N/A',
-              deviceId: 'N/A',
-              ipAddress: 'N/A',
-              fraudProbability: p.fraudProbability,
-              riskScore,
-              riskLevel,
-              status: 'pending',
-              features: {
-                amount: Number(t?.proposed_credit_limit ?? 0),
-                timeOfDay: 0,
-                locationRisk: 0,
-                deviceTrust: 0,
-                userBehavior: 0
-              }
-            };
-          });
-          setResults(mapped);
-        } else {
-          setResults([]);
-        }
+      
+        setResults([]);
       } catch (error) {
         console.error('Failed to load and score transactions:', error);
       } finally {

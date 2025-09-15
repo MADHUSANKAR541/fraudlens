@@ -17,16 +17,8 @@ export function useSupabaseDashboardSync(userId: string | null) {
         const rows = await supabaseUploadService.fetchAll(userId);
         const transactions: TransactionData[] = rows as unknown as TransactionData[];
         if (!transactions.length) return;
-        const analyzed = await backendService.analyzeTransactions(transactions);
-        if (analyzed.success && analyzed.data) {
-          updateWithRealData({
-            predictions: analyzed.data.predictions,
-            modelMetrics: analyzed.data.model_metrics,
-            processingTime: analyzed.data.processing_time,
-            totalRecords: analyzed.data.total_records,
-            fraudCount: analyzed.data.fraud_count
-          });
-        }
+        // Disabled backend batch analysis from dashboard
+        return;
       } catch (e) {
         console.warn('Supabase sync failed', e);
       }

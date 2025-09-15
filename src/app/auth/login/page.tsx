@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
@@ -16,6 +16,12 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    // Prefetch dashboard to speed up redirect after login
+    router.prefetch('/dashboard');
+  }, [router]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -29,6 +35,7 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     const result = await signIn('credentials', {
       email: formData.email,
       password: formData.password,
@@ -37,8 +44,10 @@ const LoginPage: React.FC = () => {
 
     if (result && !result.error) {
       router.push('/dashboard');
+      // do not unset isSubmitting; page will unmount on navigation
     } else {
       console.error('Login failed:', result?.error);
+      setIsSubmitting(false);
     }
   };
 
@@ -71,7 +80,7 @@ const LoginPage: React.FC = () => {
               <p className="text-sm sm:text-base text-gray-600">Enter your credentials to access your account</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 relative">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -159,15 +168,32 @@ const LoginPage: React.FC = () => {
 
               <motion.button
                 type="submit"
-                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg"
+                disabled={isSubmitting}
+                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Sign In
-                <ArrowRight className="ml-2 h-4 w-4" />
+                {isSubmitting ? (
+                  <>
+                    <span className="sr-only">Signing in…</span>
+                    <motion.div
+                      className="w-6 h-6 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg flex items-center justify-center mr-2"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                    >
+                      <Shield className="w-4 h-4 text-white" />
+                    </motion.div>
+                    Processing
+                  </>
+                ) : (
+                  <>
+                    Sign In
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </motion.button>
             </form>
 

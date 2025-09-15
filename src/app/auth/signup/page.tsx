@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Eye, EyeOff, Lock, Mail, User, ArrowRight, Shield, CheckCircle } from 'lucide-react';
@@ -21,6 +22,13 @@ const SignupPage: React.FC = () => {
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [gazeX, setGazeX] = useState(0.5);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Prefetch login route since we redirect there after signup
+    router.prefetch('/auth/login');
+  }, []);
 
   const updateGazeFromTarget = (target: HTMLInputElement) => {
     try {
@@ -64,6 +72,7 @@ const SignupPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setIsSubmitting(true);
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -76,11 +85,14 @@ const SignupPage: React.FC = () => {
       });
       if (!res.ok) {
         console.error('Signup failed');
+        setIsSubmitting(false);
         return;
       }
+      // Keep loader visible until navigation completes
       window.location.href = '/auth/login';
     } catch (err) {
       console.error(err);
+      setIsSubmitting(false);
     }
   };
 
@@ -380,7 +392,7 @@ const SignupPage: React.FC = () => {
 
               <motion.button
                 type="submit"
-                disabled={!formData.agreeToTerms || !passwordsMatch}
+                disabled={!formData.agreeToTerms || !passwordsMatch || isSubmitting}
                 className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -388,8 +400,24 @@ const SignupPage: React.FC = () => {
                 whileHover={{ scale: formData.agreeToTerms && passwordsMatch ? 1.02 : 1 }}
                 whileTap={{ scale: formData.agreeToTerms && passwordsMatch ? 0.98 : 1 }}
               >
-                Start Free Trial
-                <ArrowRight className="ml-2 h-4 w-4" />
+                {isSubmitting ? (
+                  <>
+                    <span className="sr-only">Creating account…</span>
+                    <motion.div
+                      className="w-6 h-6 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg flex items-center justify-center mr-2"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                    >
+                      <Shield className="w-4 h-4 text-white" />
+                    </motion.div>
+                    Processing
+                  </>
+                ) : (
+                  <>
+                    Start Free Trial
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </motion.button>
             </form>
 
