@@ -14,7 +14,6 @@ export function useWakeUp() {
       try {
         setIsWakingUp(true);
         
-        // Initialize the wake-up service
         await wakeUpService.initialize();
         
         if (mounted) {
@@ -30,12 +29,10 @@ export function useWakeUp() {
       }
     };
 
-    // Only run on client side
     if (typeof window !== 'undefined') {
       initializeWakeUp();
     }
 
-    // Cleanup function
     return () => {
       mounted = false;
       wakeUpService.stopPeriodicWakeUp();

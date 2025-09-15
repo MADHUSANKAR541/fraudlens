@@ -14,7 +14,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
   const [isBlinking, setIsBlinking] = useState(false);
   const [isEyesClosed, setIsEyesClosed] = useState(false);
 
-  // Auto-blink animation
   useEffect(() => {
     const blinkInterval = setInterval(() => {
       if (!isPasswordFocused) {
@@ -26,7 +25,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
     return () => clearInterval(blinkInterval);
   }, [isPasswordFocused]);
 
-  // Close eyes when password is focused
   useEffect(() => {
     if (isPasswordFocused) {
       setIsEyesClosed(true);
@@ -35,7 +33,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
     }
   }, [isPasswordFocused]);
 
-  // Compute pupil offsets based on gazeX (clamped)
   const clampedGaze = Math.max(0, Math.min(1, gazeX));
   const pupilOffsetX = (clampedGaze - 0.5) * 6; // +/- 3px range
   const highlightOffsetX = (clampedGaze - 0.5) * 2.5;
@@ -50,7 +47,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        {/* Mascot Body */}
         <svg
           width="120"
           height="120"
@@ -59,7 +55,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
           xmlns="http://www.w3.org/2000/svg"
           className="mascot-svg"
         >
-          {/* Body */}
           <motion.ellipse
             cx="60"
             cy="80"
@@ -71,7 +66,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
             transition={{ delay: 0.2, duration: 0.3 }}
           />
           
-          {/* Head */}
           <motion.circle
             cx="60"
             cy="50"
@@ -82,7 +76,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
             transition={{ delay: 0.1, duration: 0.3 }}
           />
           
-          {/* Ears */}
           <motion.ellipse
             cx="45"
             cy="30"
@@ -104,7 +97,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
             transition={{ delay: 0.3, duration: 0.2 }}
           />
           
-          {/* Inner Ears */}
           <motion.ellipse
             cx="45"
             cy="32"
@@ -126,7 +118,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
             transition={{ delay: 0.4, duration: 0.2 }}
           />
           
-          {/* Eyes */}
           <AnimatePresence mode="wait">
             {!isEyesClosed && !isBlinking ? (
               <motion.g
@@ -136,7 +127,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.1 }}
               >
-                {/* Left Eye */}
                 <motion.ellipse
                   cx="50"
                   cy="45"
@@ -166,7 +156,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
                   transition={{ delay: 0.7, duration: 0.1 }}
                 />
                 
-                {/* Right Eye */}
                 <motion.ellipse
                   cx="70"
                   cy="45"
@@ -204,7 +193,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.1 }}
               >
-                {/* Closed Eyes */}
                 <motion.path
                   d="M 44 45 Q 50 47 56 45"
                   stroke="#0D1B2A"
@@ -229,7 +217,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
             )}
           </AnimatePresence>
           
-          {/* Nose */}
           <motion.polygon
             points="60,50 55,55 65,55"
             fill="#FF8A80"
@@ -238,7 +225,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
             transition={{ delay: 0.8, duration: 0.2 }}
           />
           
-          {/* Mouth */}
           <motion.path
             d="M 55 60 Q 60 65 65 60"
             stroke="#0D1B2A"
@@ -250,7 +236,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
             transition={{ delay: 0.9, duration: 0.3 }}
           />
           
-          {/* Whiskers */}
           <motion.g
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -306,7 +291,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
             />
           </motion.g>
           
-          {/* Tail */}
           <motion.path
             d="M 25 80 Q 15 70 20 60 Q 25 50 30 60 Q 35 70 25 80"
             fill="url(#tailGradient)"
@@ -315,7 +299,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
             transition={{ delay: 1.3, duration: 0.5 }}
           />
           
-          {/* Gradients */}
           <defs>
             <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#42A5F5" />
@@ -336,7 +319,6 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
           </defs>
         </svg>
         
-        {/* Floating particles */}
         <div className="particles">
           {[...Array(6)].map((_, i) => (
             <motion.div

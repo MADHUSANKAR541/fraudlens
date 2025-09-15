@@ -1,5 +1,3 @@
-// Session management service for dashboard data
-// Handles mock data initially, then real data after uploads
 
 import { FraudPrediction, TransactionData } from './fraudDetectionService';
 
@@ -44,11 +42,9 @@ class SessionService {
     this.sessionData = this.loadSession();
   }
 
-  // Generate realistic mock data
   private generateMockData(): SessionData['mockData'] {
     const mockPredictions: Array<FraudPrediction & { originalData: TransactionData }> = [];
     
-    // Generate 25 mock transactions
     for (let i = 0; i < 25; i++) {
       const isFraud = Math.random() < 0.15; // 15% fraud rate
       const riskScore = isFraud ? 0.6 + Math.random() * 0.4 : Math.random() * 0.4;
@@ -130,10 +126,8 @@ class SessionService {
     };
   }
 
-  // Load session from localStorage
   private loadSession(): SessionData {
     if (typeof window === 'undefined') {
-      // Server-side rendering fallback
       return {
         hasUploadedData: false,
         mockData: this.generateMockData(),
@@ -146,7 +140,6 @@ class SessionService {
       const stored = localStorage.getItem(this.sessionKey);
       if (stored) {
         const parsed = JSON.parse(stored);
-        // Ensure we have mock data even if session exists
         if (!parsed.mockData) {
           parsed.mockData = this.generateMockData();
         }
@@ -156,7 +149,6 @@ class SessionService {
       console.warn('Failed to load session data:', error);
     }
 
-    // Return fresh session with mock data
     return {
       hasUploadedData: false,
       mockData: this.generateMockData(),
@@ -165,7 +157,6 @@ class SessionService {
     };
   }
 
-  // Save session to localStorage
   private saveSession(): void {
     if (typeof window === 'undefined') return;
 
@@ -176,19 +167,16 @@ class SessionService {
     }
   }
 
-  // Get current dashboard data (mock or real)
   getCurrentData(): SessionData['mockData'] | SessionData['realData'] {
     return this.sessionData.hasUploadedData && this.sessionData.realData 
       ? this.sessionData.realData 
       : this.sessionData.mockData;
   }
 
-  // Check if we're showing real data
   isShowingRealData(): boolean {
     return this.sessionData.hasUploadedData && this.sessionData.realData !== null;
   }
 
-  // Update with real upload data
   updateWithRealData(realData: SessionData['realData']): void {
     this.sessionData.hasUploadedData = true;
     this.sessionData.realData = realData;
@@ -196,7 +184,6 @@ class SessionService {
     this.saveSession();
   }
 
-  // Reset to mock data
   resetToMockData(): void {
     this.sessionData.hasUploadedData = false;
     this.sessionData.realData = null;
@@ -205,7 +192,6 @@ class SessionService {
     this.saveSession();
   }
 
-  // Get session info
   getSessionInfo(): {
     hasUploadedData: boolean;
     lastUpdated: string;
@@ -223,7 +209,6 @@ class SessionService {
     };
   }
 
-  // Clear all session data
   clearSession(): void {
     this.sessionData = {
       hasUploadedData: false,
@@ -234,7 +219,6 @@ class SessionService {
     this.saveSession();
   }
 
-  // Refresh mock data (generate new mock data)
   refreshMockData(): void {
     this.sessionData.mockData = this.generateMockData();
     this.sessionData.lastUpdated = new Date().toISOString();
@@ -242,6 +226,5 @@ class SessionService {
   }
 }
 
-// Export singleton instance
 export const sessionService = new SessionService();
 export default sessionService;

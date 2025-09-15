@@ -23,10 +23,8 @@ export default function AIContent() {
   const [explanationLoading, setExplanationLoading] = useState<Set<number>>(new Set());
   const [showResults, setShowResults] = useState(false);
   
-  // Get session data hook
   const { dashboardData, sessionInfo } = useSessionData();
 
-  // Load data from session when component mounts
   useEffect(() => {
     if (dashboardData?.predictions && dashboardData.predictions.length > 0) {
       setProcessedData(dashboardData.predictions);
@@ -45,7 +43,6 @@ export default function AIContent() {
     setExplanationLoading(prev => new Set(prev).add(index));
 
     try {
-      // First check if backend is available, if not try to reconnect
       if (!backendService.isAvailable()) {
         console.log('🔄 Backend not available, attempting to reconnect...');
         const isHealthy = await backendService.checkHealth();
@@ -54,11 +51,9 @@ export default function AIContent() {
         }
       }
 
-      // Check if originalData is valid, if not create mock data
       let transactionData = transaction.originalData;
       if (!transactionData || Object.keys(transactionData).length === 0) {
         console.log('⚠️ Original data is missing, generating mock data for explanation');
-        // Generate mock transaction data based on the prediction
         transactionData = {
           customer_age: 35,
           income: 0.8,
@@ -113,10 +108,8 @@ export default function AIContent() {
       if (result.success && result.data) {
         console.log('✅ Explanation generated successfully');
         
-        // Clean up the explanation text
         let cleanExplanation = result.data.explanation;
         
-        // Remove markdown formatting and unwanted prefixes, then format nicely
         cleanExplanation = cleanExplanation
           .replace(/\*\*(.*?)\*\*/g, '$1') // Remove **bold** formatting
           .replace(/\*(.*?)\*/g, '$1')     // Remove *italic* formatting
@@ -133,7 +126,6 @@ export default function AIContent() {
         
         console.log('🧹 Cleaned explanation:', cleanExplanation);
         
-        // Update the specific transaction with the new explanation
         setProcessedData(prev => prev.map((item, i) => 
           i === index 
             ? { ...item, explanation: cleanExplanation }
@@ -198,7 +190,6 @@ export default function AIContent() {
 
   return (
     <div className="space-y-4 md:space-y-8 px-4 md:px-0">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -223,7 +214,6 @@ export default function AIContent() {
         )}
       </motion.div>
 
-      {/* No Data State */}
       {processedData.length === 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -246,7 +236,6 @@ export default function AIContent() {
         </motion.div>
       )}
 
-      {/* Results Section */}
       <AnimatePresence>
         {processedData.length > 0 && (
           <motion.div
@@ -267,7 +256,6 @@ export default function AIContent() {
               </div>
             </div>
             
-                {/* Summary Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-4 md:mb-6">
               <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                 <div className="flex items-center">
@@ -306,7 +294,6 @@ export default function AIContent() {
               </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 mb-4 md:mb-6">
               <button 
                 onClick={() => setShowResults(!showResults)}
@@ -331,7 +318,6 @@ export default function AIContent() {
               </button>
             </div>
 
-            {/* Detailed Results Table */}
             <AnimatePresence>
               {showResults && (
                 <motion.div
@@ -340,7 +326,6 @@ export default function AIContent() {
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {/* Desktop Table View */}
                   <div className="hidden lg:block overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50">
@@ -472,7 +457,6 @@ export default function AIContent() {
                     </table>
                   </div>
 
-                  {/* Mobile Card View */}
                   <div className="lg:hidden space-y-3">
                     {processedData.slice(0, 10).map((item, index) => (
                       <div key={index} className={`rounded-lg border p-4 ${item.isFraud ? 'bg-red-50 border-red-200' : 'bg-green-50 border-green-200'}`}>
@@ -600,7 +584,6 @@ export default function AIContent() {
         )}
       </AnimatePresence>
 
-      {/* AI Insights Section */}
       {processedData.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}

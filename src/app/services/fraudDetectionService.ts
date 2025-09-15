@@ -1,5 +1,3 @@
-// Fraud detection service interfaces and types
-// All actual prediction logic is handled by the backend API
 
 export interface FraudPrediction {
   isFraud: boolean;
@@ -15,47 +13,38 @@ export interface FraudPrediction {
 }
 
 export interface TransactionData {
-  // Customer Demographics
   customer_age: number;
   income: number;
   name_email_similarity: number;
   
-  // Address Information
   prev_address_months_count: number;
   current_address_months_count: number;
   
-  // Transaction Details
   days_since_request: number;
   intended_balcon_amount: number;
   proposed_credit_limit: number;
   
-  // Payment & Banking
   payment_type: string; // AA, AB, AC, etc.
   bank_months_count: number;
   has_other_cards: number; // 0/1
   foreign_request: number; // 0/1
   
-  // Velocity Features
   velocity_6h: number;
   velocity_24h: number;
   velocity_4w: number;
   
-  // Location & Activity
   zip_count_4w: number;
   bank_branch_count_8w: number;
   date_of_birth_distinct_emails_4w: number;
   
-  // Risk & Status
   credit_risk_score: number;
   employment_status: string; // CA, CB, CC, etc.
   housing_status: string; // BA, BB, BC, etc.
   
-  // Contact Information
   email_is_free: number; // 0/1
   phone_home_valid: number; // 0/1
   phone_mobile_valid: number; // 0/1
   
-  // Device & Session
   source: string; // INTERNET, MOBILE, BRANCH, ATM
   session_length_in_minutes: number;
   device_os: string; // windows, mac, linux, android, ios, other
@@ -63,10 +52,8 @@ export interface TransactionData {
   device_distinct_emails_8w: number;
   device_fraud_count: number;
   
-  // Temporal
   month: number; // 0-11
   
-  // Ground Truth (for training/evaluation)
   fraud_bool?: number; // 0/1 - optional, only present in training data
 }
 
@@ -79,7 +66,6 @@ export interface ModelMetrics {
   accuracy: number;
 }
 
-// Default model metrics - will be replaced by real backend data
 export const DEFAULT_MODEL_METRICS: ModelMetrics = {
   rocAuc: 0.9465,
   prAuc: 0.5476,
@@ -89,7 +75,6 @@ export const DEFAULT_MODEL_METRICS: ModelMetrics = {
   accuracy: 0.9016
 };
 
-// Feature importance based on actual model analysis
 export const FEATURE_IMPORTANCE = [
   { feature: 'velocity_6h', importance: 0.18 },
   { feature: 'velocity_24h', importance: 0.15 },

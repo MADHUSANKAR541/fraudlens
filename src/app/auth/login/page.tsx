@@ -50,7 +50,6 @@ const LoginPage: React.FC = () => {
     if (result && !result.error) {
       router.push('/dashboard');
     } else {
-      // eslint-disable-next-line no-console
       console.error('Login failed:', result?.error);
     }
   };
@@ -73,7 +72,6 @@ const LoginPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50 flex items-center justify-center p-4 sm:p-6">
       <div className="max-w-6xl w-full grid grid-cols-1 items-center">
 
-        {/* Right Side - Login Form */}
         <motion.div 
           className="w-full max-w-md mx-auto"
           initial={{ opacity: 0, x: 50 }}
@@ -81,7 +79,6 @@ const LoginPage: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 border border-white/20">
-            {/* Mascot inside the sign-in box */}
             <motion.div
               className="flex items-center justify-center mb-6"
               initial={{ opacity: 0, scale: 0.95 }}
@@ -99,7 +96,6 @@ const LoginPage: React.FC = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Email Field */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -125,7 +121,6 @@ const LoginPage: React.FC = () => {
                 </div>
               </motion.div>
 
-              {/* Password Field */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -163,7 +158,6 @@ const LoginPage: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Password Strength Indicator */}
                 {formData.password && (
                   <motion.div 
                     className="mt-2"
@@ -184,7 +178,6 @@ const LoginPage: React.FC = () => {
                 )}
               </motion.div>
 
-              {/* Remember Me & Forgot Password */}
               <motion.div 
                 className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
                 initial={{ opacity: 0, y: 20 }}
@@ -210,7 +203,6 @@ const LoginPage: React.FC = () => {
                 </Link>
               </motion.div>
 
-              {/* Submit Button */}
               <motion.button
                 type="submit"
                 className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg"
@@ -225,7 +217,6 @@ const LoginPage: React.FC = () => {
               </motion.button>
             </form>
 
-            {/* Divider */}
             <motion.div 
               className="mt-6"
               initial={{ opacity: 0 }}
@@ -242,7 +233,6 @@ const LoginPage: React.FC = () => {
               </div>
             </motion.div>
 
-            {/* Social Login Buttons */}
             <motion.div 
               className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3"
               initial={{ opacity: 0, y: 20 }}
@@ -266,7 +256,6 @@ const LoginPage: React.FC = () => {
               </button>
             </motion.div>
 
-            {/* Sign Up Link */}
             <motion.div 
               className="mt-6 text-center"
               initial={{ opacity: 0 }}

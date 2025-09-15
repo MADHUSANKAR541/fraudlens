@@ -27,7 +27,6 @@ const LandingPage: React.FC = () => {
   const howRef = useRef<HTMLDivElement>(null);
   const [scanDone, setScanDone] = useState(false);
   
-  // Get wake-up context for backend status
   const { isBackendAlive, isWakingUp } = useWakeUpContext();
   
   const { scrollYProgress } = useScroll();
@@ -126,7 +125,6 @@ const LandingPage: React.FC = () => {
             </div>
             
             <div className="flex items-center space-x-2 sm:space-x-4">
-              {/* Backend Status Indicator */}
               <div className="hidden lg:flex items-center space-x-1 px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm">
                 <div className={`w-2 h-2 rounded-full ${
                   isWakingUp ? 'bg-yellow-400 animate-pulse' :
@@ -159,9 +157,7 @@ const LandingPage: React.FC = () => {
         </div>
       </motion.nav>
 
-      {/* Hero Section */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated Background */}
         <motion.div 
           className="absolute inset-0"
           style={{ 
@@ -177,7 +173,6 @@ const LandingPage: React.FC = () => {
             backgroundSize: 'cover'
           }}
         />
-        {/* Subtle grid overlay */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -189,7 +184,6 @@ const LandingPage: React.FC = () => {
             backgroundPosition: '0 0, 0 0'
           }}
         />
-        {/* Vignette */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -197,10 +191,8 @@ const LandingPage: React.FC = () => {
           }}
         />
         
-        {/* Floating Elements */}
         <div className="absolute inset-0">
           {[...Array(12)].map((_, i) => {
-            // Use a seeded random function to ensure consistent values between server and client
             const seededRandom = (seed: number) => {
               const x = Math.sin(seed) * 10000;
               return x - Math.floor(x);
@@ -233,7 +225,6 @@ const LandingPage: React.FC = () => {
           })}
         </div>
 
-        {/* Mouse Follower */}
         <motion.div
           className="absolute w-48 h-48 bg-gradient-to-r from-teal-400/15 to-sky-400/15 rounded-full blur-2xl pointer-events-none"
           animate={{
@@ -250,7 +241,6 @@ const LandingPage: React.FC = () => {
             transition={{ duration: 0.8 }}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-              {/* Left: Headline and CTAs */}
               <div className="w-full max-w-xl mx-auto md:mx-0 flex flex-col items-center md:items-start px-4 sm:px-0">
             <motion.h1 
                   className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-slate-900 leading-tight mb-4 text-center md:text-left"
@@ -293,9 +283,7 @@ const LandingPage: React.FC = () => {
                 </motion.div>
               </div>
 
-              {/* Right: Bank + scanning lens mockup */}
               <div className="relative h-[280px] sm:h-[340px] md:h-[420px] lg:h-[460px] -translate-y-5 sm:-translate-y-10 md:-translate-y-4 px-4 sm:px-0">
-                {/* Bank base */}
                 <motion.div 
                   className="absolute inset-0 flex items-end justify-center"
                   initial={{ opacity: 0, y: 20 }}
@@ -303,38 +291,30 @@ const LandingPage: React.FC = () => {
                   transition={{ duration: 0.8, delay: 0.3 }}
                 >
                   <div className="w-[88%] max-w-xl aspect-[5/3] rounded-[28px] border border-white/15 bg-white/5 backdrop-blur-xl shadow-[0_20px_80px_rgba(2,6,23,0.45)] overflow-hidden relative flex items-center justify-center">
-                    {/* Frosted frame with subtle gradient stroke */}
                     <div className="pointer-events-none absolute inset-0 rounded-[28px]" style={{
                       boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)'
                     }} />
-                    {/* Visible outline */}
                     <div className="pointer-events-none absolute inset-0 rounded-[28px] border-2 border-slate-300/50" />
                     <div className="absolute inset-0 bg-gradient-to-b from-white/8 to-transparent" />
-                    {/* Vector bank mockup (enhanced realism) */}
                     <svg viewBox="0 0 340 210" className="relative h-auto" style={{ width: '85%', transform: 'translateY(4px) scaleY(1.2)' }}>
                       <defs>
-                        {/* Column gradient */}
                         <linearGradient id="colGrad" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="0%" stopColor="rgba(255,255,255,0.95)" />
                           <stop offset="55%" stopColor="rgba(245,251,255,0.85)" />
                           <stop offset="100%" stopColor="rgba(226,232,240,0.75)" />
                         </linearGradient>
-                        {/* Marble subtle veins */}
                         <linearGradient id="marble" x1="0" y1="0" x2="1" y2="1">
                           <stop offset="0%" stopColor="rgba(255,255,255,0.98)" />
                           <stop offset="100%" stopColor="rgba(240,255,252,0.9)" />
                         </linearGradient>
-                        {/* Roof gradient */}
                         <linearGradient id="roofGrad" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="0%" stopColor="rgba(255,255,255,1)" />
                           <stop offset="100%" stopColor="rgba(56,189,248,0.55)" />
                         </linearGradient>
-                        {/* Blue glass */}
                         <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="0%" stopColor="rgba(167,243,208,0.55)" />
                           <stop offset="100%" stopColor="rgba(59,130,246,0.32)" />
                         </linearGradient>
-                        {/* Soft shadow */}
                         <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
                           <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur" />
                           <feOffset dy="2" result="off" />
@@ -343,62 +323,49 @@ const LandingPage: React.FC = () => {
                             <feMergeNode in="SourceGraphic" />
                           </feMerge>
                         </filter>
-                        {/* Engrave effect */}
                         <linearGradient id="engrave" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
                           <stop offset="100%" stopColor="rgba(255,255,255,0.55)" />
                         </linearGradient>
                       </defs>
  
-                      {/* Ground shadow removed for flatter look */}
  
-                      {/* Base steps */}
                       <g filter="url(#softShadow)">
                         <rect x="46" y="164" width="248" height="12" rx="6" fill="url(#marble)" />
                         <rect x="62" y="152" width="216" height="10" rx="5" fill="url(#marble)" />
                         <rect x="76" y="142" width="188" height="8" rx="4" fill="rgba(203,213,225,0.75)" />
                       </g>
  
-                      {/* Facade beam with engraving */}
                       <g filter="url(#softShadow)">
                         <rect x="52" y="98" width="236" height="12" rx="6" fill="url(#marble)" />
                         <text x="170" y="95" textAnchor="middle" fontSize="16" letterSpacing="2.5" fill="rgba(15,23,42,0.65)" stroke="rgba(15,23,42,0.45)" strokeWidth="0.6">BANK</text>
                         <text x="170" y="94" textAnchor="middle" fontSize="16" letterSpacing="2.5" fill="rgba(255,255,255,0.98)" stroke="rgba(255,255,255,0.7)" strokeWidth="0.25">BANK</text>
                       </g>
  
-                      {/* Columns */}
                       {Array.from({ length: 5 }).map((_, i) => {
                         const x = 74 + i * 42;
                         return (
                           <g key={i} filter="url(#softShadow)">
-                            {/* shaft */}
                             <rect x={x} y={108} width="22" height="46" rx="11" fill="url(#colGrad)" />
-                            {/* flutes */}
                             <rect x={x + 4} y={110} width="2" height="42" rx="1" fill="rgba(148,163,184,0.9)" />
                             <rect x={x + 9} y={110} width="2" height="42" rx="1" fill="rgba(100,116,139,0.9)" />
                             <rect x={x + 14} y={110} width="2" height="42" rx="1" fill="rgba(148,163,184,0.9)" />
-                            {/* capital and base */}
                             <rect x={x - 6} y="102" width="34" height="8" rx="4" fill="rgba(255,255,255,0.98)" stroke="rgba(148,163,184,0.5)" strokeWidth="0.5" />
                             <rect x={x - 6} y="154" width="34" height="8" rx="4" fill="rgba(250,250,255,0.98)" stroke="rgba(148,163,184,0.5)" strokeWidth="0.5" />
                           </g>
                         );
                       })}
  
-                      {/* Roof with depth */}
                       <g filter="url(#softShadow)">
                         <polygon points="170,34 272,92 68,92" fill="url(#roofGrad)" />
-                        {/* roof rim */}
                         <polygon points="170,42 240,90 100,90" fill="url(#glass)" stroke="rgba(59,130,246,0.4)" strokeWidth="1" />
-                        {/* ridge highlight */}
                         <line x1="170" y1="34" x2="170" y2="92" stroke="rgba(2,132,199,0.55)" strokeWidth="2" />
                       </g>
  
-                      {/* Front door / glass panel - toned down to avoid obscuring columns */}
                       <g opacity="0.25">
                         <rect x="152" y="118" width="36" height="30" rx="4" fill="url(#glass)" stroke="rgba(71,85,105,0.25)" strokeWidth="0.5" />
                       </g>
 
-                      {/* BANK label overlay on top (higher stacking order) */}
                       <g pointerEvents="none">
                         <text x="170" y="94" textAnchor="middle" fontSize="16" letterSpacing="2.5" fill="rgba(255,255,255,0.98)" stroke="rgba(255,255,255,0.7)" strokeWidth="0.25">BANK</text>
                         <text x="170" y="95" textAnchor="middle" fontSize="16" letterSpacing="2.5" fill="rgba(15,23,42,0.65)" stroke="rgba(15,23,42,0.45)" strokeWidth="0.6">BANK</text>
@@ -407,7 +374,6 @@ const LandingPage: React.FC = () => {
                   </div>
                 </motion.div>
 
-                {/* Scanning lens */}
                 {!scanDone && (
                   <motion.div
                     className="absolute"
@@ -419,9 +385,7 @@ const LandingPage: React.FC = () => {
                     transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
                   >
                     <div className="relative">
-                      {/* Local glow on the bank under the lens */}
                       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-64 h-64 rounded-full bg-sky-500/20 blur-2xl" />
-                      {/* Magnifying glass mockup */}
                       <div className="w-36 h-36 drop-shadow-[0_10px_30px_rgba(2,132,199,0.35)]">
                         <svg viewBox="0 0 100 100" className="w-full h-full">
                           <defs>
@@ -439,20 +403,14 @@ const LandingPage: React.FC = () => {
                               <stop offset="100%" stopColor="rgba(2,132,199,0.45)" />
                             </linearGradient>
                           </defs>
-                          {/* Outer glow */}
                           <circle cx="38" cy="38" r="30" fill="url(#lensGlow)" />
-                          {/* Handle */}
                           <g transform="translate(52,52) rotate(35)">
                             <rect x="0" y="0" width="32" height="8" rx="4" fill="rgba(2,132,199,0.9)" />
                             <rect x="2" y="2" width="28" height="4" rx="2" fill="rgba(255,255,255,0.65)" />
                           </g>
-                          {/* Rim */}
                           <circle cx="38" cy="38" r="22" fill="url(#glassGrad)" stroke="url(#rim)" strokeWidth="4" />
-                          {/* Outer outline for contrast */}
                           <circle cx="38" cy="38" r="24" fill="none" stroke="rgba(2,132,199,0.8)" strokeWidth="2" />
-                          {/* Inner gloss */}
                           <path d="M20,34 C26,24 48,20 58,28" fill="none" stroke="rgba(255,255,255,0.75)" strokeWidth="3" strokeLinecap="round" />
-                          {/* Lower shadow arc */}
                           <path d="M19,42 C25,50 51,53 60,44" fill="none" stroke="rgba(2,132,199,0.3)" strokeWidth="3" strokeLinecap="round" />
                         </svg>
                       </div>
@@ -460,7 +418,6 @@ const LandingPage: React.FC = () => {
                   </motion.div>
                 )}
 
-                {/* Final shield + Guarded badge */}
                 {scanDone && (
                   <motion.div
                     className="absolute inset-0"
@@ -468,7 +425,6 @@ const LandingPage: React.FC = () => {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.6 }}
                   >
-                    {/* Shield tile inside mockup (upper-right area) */}
                     <div className="absolute" style={{ top: '38%', right: '10%' }}>
                       <div className="relative">
                         <div className="absolute -inset-4 rounded-xl bg-gradient-to-b from-teal-400/20 to-blue-500/10 blur-xl" />
@@ -477,7 +433,6 @@ const LandingPage: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    {/* Guarded pill over the roof center */}
                     <div className="absolute left-1/2 top-[40%] -translate-x-1/2">
                       <div className="backdrop-blur-md bg-white border border-emerald-300 rounded-full px-4 py-1.5 text-teal-800 font-semibold text-sm shadow-[0_4px_20px_rgba(2,6,23,0.15)] inline-flex items-center gap-2">
                         <span className="inline-block w-2 h-2 rounded-full bg-emerald-800" />
@@ -491,7 +446,6 @@ const LandingPage: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* Scroll Indicator */}
         <motion.div 
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
           animate={{ y: [0, 10, 0] }}
@@ -507,7 +461,6 @@ const LandingPage: React.FC = () => {
         </motion.div>
       </section>
 
-      {/* The Challenge (Pain Points) */}
       <section id="problem" ref={problemRef} className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -545,7 +498,6 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Why FraudLens AI */}
       <section id="why" ref={whyRef} className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -558,7 +510,6 @@ const LandingPage: React.FC = () => {
             <p className="text-2xl md:text-2xl  text-gray-900 mb-4">Built for speed, scale, and clarity—without the false alarms.</p>
           </motion.div>
 
-          {/* Fresh design: gradient panel with clean vertical feature list (no boxes) */}
           <motion.div 
             className="relative"
             initial={{ opacity: 0 }}
@@ -602,7 +553,6 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* How It Works */}
       <section id="how" ref={howRef} className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -615,7 +565,6 @@ const LandingPage: React.FC = () => {
             <p className="text-2xl md:text-2xl  text-gray-900 mb-4">A simple, explainable flow from data to decisions.</p>
           </motion.div>
 
-          {/* Distinct style: vertical timeline */}
           <motion.ol 
             className="relative mx-auto max-w-3xl px-4 sm:px-0"
             initial={{ opacity: 0 }}
@@ -652,7 +601,6 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Demo Call-to-Action */}
       <section className="py-20 bg-gradient-to-br from-emerald-500 to-teal-600">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
@@ -683,7 +631,6 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* About the Team (Optional) */}
       <section id="about" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
@@ -700,7 +647,6 @@ const LandingPage: React.FC = () => {
             {teamMembers.map((m, i) => (
               <div key={i} className="text-center">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto rounded-full bg-gray-100 overflow-hidden mb-3 sm:mb-4 flex items-center justify-center">
-                  {/* Placeholder avatar */}
                   <Image src={m.photo} alt={m.name} width={64} height={64} className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 opacity-70" />
                 </div>
                 <div className="font-semibold text-gray-900 text-sm sm:text-base">{m.name}</div>
@@ -711,7 +657,6 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">

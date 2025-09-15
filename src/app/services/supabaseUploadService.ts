@@ -14,7 +14,6 @@ export const supabaseUploadService = {
     if (!supabase) throw new Error('Supabase client not initialized');
     if (!rows.length) return { success: true } as const;
 
-    // Delete existing for user, then insert
     if (userId) {
       await supabase.from(TABLE).delete().eq('user_id', userId);
     } else {

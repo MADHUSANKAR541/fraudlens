@@ -32,10 +32,8 @@ export function useSupabaseDashboardSync(userId: string | null) {
       }
     };
 
-    // Initial fetch
     syncFromDb();
 
-    // Subscribe to changes
     supabaseUploadService.subscribe(userId, () => {
       syncFromDb();
     }).then((unsub) => {

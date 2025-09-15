@@ -1,4 +1,3 @@
-// API service for communicating with the backend fraud detection system
 import { TransactionData, FraudPrediction, ModelMetrics } from './fraudDetectionService';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://npn-kh8l.onrender.com';
@@ -82,7 +81,6 @@ class ApiService {
     }
   }
 
-  // Upload CSV file and get fraud predictions
   async uploadAndAnalyze(file: File): Promise<BackendResponse<FraudDetectionResponse>> {
     const formData = new FormData();
     formData.append('file', file);
@@ -111,7 +109,6 @@ class ApiService {
     }
   }
 
-  // Analyze transaction data
   async analyzeTransactions(
     data: TransactionData[],
     includeExplanations: boolean = true
@@ -125,12 +122,10 @@ class ApiService {
     });
   }
 
-  // Get model information and metrics
   async getModelInfo(): Promise<BackendResponse<ModelInfoResponse>> {
     return this.makeRequest<ModelInfoResponse>('/model/info');
   }
 
-  // Get real-time fraud statistics
   async getFraudStats(): Promise<BackendResponse<{
     total_transactions: number;
     fraud_count: number;
@@ -142,7 +137,6 @@ class ApiService {
     return this.makeRequest('/stats/fraud');
   }
 
-  // Get feature importance
   async getFeatureImportance(): Promise<BackendResponse<Array<{
     feature: string;
     importance: number;
@@ -151,7 +145,6 @@ class ApiService {
     return this.makeRequest('/model/features');
   }
 
-  // Health check
   async healthCheck(): Promise<BackendResponse<{
     status: string;
     model_loaded: boolean;
@@ -161,7 +154,6 @@ class ApiService {
     return this.makeRequest('/health');
   }
 
-  // Get fraud cases with pagination
   async getFraudCases(
     page: number = 1,
     limit: number = 20,
@@ -199,7 +191,6 @@ class ApiService {
     return this.makeRequest(`/fraud-cases?${queryParams}`);
   }
 
-  // Update fraud case status
   async updateFraudCaseStatus(
     caseId: string,
     status: 'pending' | 'approved' | 'blocked' | 'investigating'
@@ -210,7 +201,6 @@ class ApiService {
     });
   }
 
-  // Get model performance metrics over time
   async getModelPerformanceHistory(
     days: number = 30
   ): Promise<BackendResponse<Array<{
@@ -224,7 +214,6 @@ class ApiService {
     return this.makeRequest(`/model/performance?days=${days}`);
   }
 
-  // Download fraud detection report
   async downloadReport(
     format: 'csv' | 'excel' | 'pdf' = 'csv',
     filters?: {
@@ -242,6 +231,5 @@ class ApiService {
   }
 }
 
-// Export singleton instance
 export const apiService = new ApiService();
 export default apiService;

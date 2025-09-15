@@ -29,7 +29,6 @@ const SignupPage: React.FC = () => {
       const ratio = length > 0 ? caret / length : 0.1;
       setGazeX(Math.max(0, Math.min(1, ratio)));
     } catch {
-      // noop
     }
   };
 
@@ -76,14 +75,11 @@ const SignupPage: React.FC = () => {
         })
       });
       if (!res.ok) {
-        // eslint-disable-next-line no-console
         console.error('Signup failed');
         return;
       }
-      // Optionally auto sign-in or redirect
       window.location.href = '/auth/login';
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error(err);
     }
   };
@@ -107,7 +103,6 @@ const SignupPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50 flex items-center justify-center p-4">
       <div className="w-full max-w-3xl flex items-center justify-center">
-        {/* Signup Form - Horizontal */}
         <motion.div 
           className="w-full mx-auto"
           initial={{ opacity: 0, x: 50 }}
@@ -115,7 +110,6 @@ const SignupPage: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border border-white/20">
-            {/* Mobile Logo */}
             <div className="lg:hidden flex items-center justify-center space-x-3 mb-4">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg flex items-center justify-center">
                 <Shield className="w-6 h-6 text-white" />
@@ -123,13 +117,11 @@ const SignupPage: React.FC = () => {
               <h1 className="text-2xl font-bold text-gray-900">FraudLens</h1>
             </div>
 
-            {/* Header */}
             <div className="text-center mb-2">
               <h2 className="text-2xl font-bold text-gray-900 mb-1">Create Account</h2>
               <p className="text-gray-600 text-sm">Start your free trial today</p>
             </div>
 
-            {/* Mascot directly under header */}
             <motion.div 
               className="flex justify-center mb-4"
               initial={{ opacity: 0, y: 6 }}
@@ -139,9 +131,7 @@ const SignupPage: React.FC = () => {
               <Mascot isPasswordFocused={isPasswordFocused} compact gazeX={gazeX} />
             </motion.div>
 
-            {/* Form fields */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Name Fields */}
               <motion.div 
                 className="grid grid-cols-2 gap-4"
                 initial={{ opacity: 0, y: 20 }}
@@ -191,7 +181,6 @@ const SignupPage: React.FC = () => {
                 </div>
               </motion.div>
 
-              {/* Email Field */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -220,7 +209,6 @@ const SignupPage: React.FC = () => {
                 </div>
               </motion.div>
 
-              {/* Company Field */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -243,7 +231,6 @@ const SignupPage: React.FC = () => {
                 />
               </motion.div>
 
-              {/* Password Field */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -284,7 +271,6 @@ const SignupPage: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Password Strength Indicator */}
                 {formData.password && (
                   <motion.div 
                     className="mt-2"
@@ -305,7 +291,6 @@ const SignupPage: React.FC = () => {
                 )}
               </motion.div>
 
-              {/* Confirm Password Field */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -344,7 +329,6 @@ const SignupPage: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Password Match Indicator */}
                 {formData.confirmPassword && (
                   <motion.div 
                     className="mt-2 flex items-center space-x-2"
@@ -367,7 +351,6 @@ const SignupPage: React.FC = () => {
                 )}
               </motion.div>
 
-              {/* Terms Agreement */}
               <motion.div 
                 className="flex items-start space-x-3"
                 initial={{ opacity: 0, y: 20 }}
@@ -395,7 +378,6 @@ const SignupPage: React.FC = () => {
                 </label>
               </motion.div>
 
-              {/* Submit Button */}
               <motion.button
                 type="submit"
                 disabled={!formData.agreeToTerms || !passwordsMatch}
@@ -411,7 +393,6 @@ const SignupPage: React.FC = () => {
               </motion.button>
             </form>
 
-            {/* Divider */}
             <motion.div 
               className="mt-4"
               initial={{ opacity: 0 }}
@@ -428,7 +409,6 @@ const SignupPage: React.FC = () => {
               </div>
             </motion.div>
 
-            {/* Social Login Buttons */}
             <motion.div 
               className="mt-4 grid grid-cols-2 gap-3"
               initial={{ opacity: 0, y: 20 }}
@@ -452,7 +432,6 @@ const SignupPage: React.FC = () => {
               </button>
             </motion.div>
 
-            {/* Sign In Link */}
             <motion.div 
               className="mt-4 text-center"
               initial={{ opacity: 0 }}

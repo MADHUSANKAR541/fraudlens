@@ -47,7 +47,6 @@ export default function BackendStatusIndicator() {
 
   return (
     <>
-      {/* Compact Status Indicator */}
       <motion.div
         className="fixed top-4 right-4 z-50"
         initial={{ opacity: 0, x: 20 }}
@@ -65,7 +64,6 @@ export default function BackendStatusIndicator() {
         </div>
       </motion.div>
 
-      {/* Expanded Status Panel */}
       <AnimatePresence>
         {isExpanded && (
           <motion.div
@@ -76,7 +74,6 @@ export default function BackendStatusIndicator() {
             transition={{ duration: 0.2 }}
           >
             <div className="p-4">
-              {/* Header */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-2">
                   {getStatusIcon()}
@@ -90,7 +87,6 @@ export default function BackendStatusIndicator() {
                 </button>
               </div>
 
-              {/* Status Details */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Status:</span>
@@ -106,7 +102,6 @@ export default function BackendStatusIndicator() {
                   </span>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex space-x-2 pt-2">
                   <button
                     onClick={handleManualWakeUp}
@@ -126,7 +121,6 @@ export default function BackendStatusIndicator() {
                   </button>
                 </div>
 
-                {/* Additional Info */}
                 <div className="pt-2 border-t border-gray-100">
                   <button
                     onClick={() => setShowDetails(!showDetails)}

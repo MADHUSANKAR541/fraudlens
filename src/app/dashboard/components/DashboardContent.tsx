@@ -38,7 +38,6 @@ export default function DashboardContent() {
   const [modelMetrics, setModelMetrics] = useState(DEFAULT_MODEL_METRICS);
   const [backendLoading, setBackendLoading] = useState(false);
 
-  // Calculate fraud stats from session data
   const fraudStats = dashboardData ? {
     total_transactions: dashboardData.totalRecords,
     fraud_count: dashboardData.fraudCount,
@@ -58,14 +57,12 @@ export default function DashboardContent() {
   useEffect(() => {
     const loadModelMetrics = async () => {
       try {
-        // Try to get real model metrics from backend
         const modelInfoResult = await backendService.getModelInfo();
         if (modelInfoResult.success && modelInfoResult.data) {
           setModelMetrics(modelInfoResult.data.metrics);
         }
       } catch (error) {
         console.warn('Failed to load model metrics from backend, using defaults:', error);
-        // Keep using default metrics
       }
     };
 
@@ -105,7 +102,6 @@ export default function DashboardContent() {
 
   return (
     <div className="space-y-6">
-      {/* Data Source Indicator */}
       <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 gap-2">
@@ -162,7 +158,6 @@ export default function DashboardContent() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {/* AI Insights */}
       <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm relative">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center">
@@ -188,7 +183,6 @@ export default function DashboardContent() {
         <p className="text-gray-600 text-sm mt-4">Model trained on 1.8M+ transactions with 94.7% accuracy</p>
       </div>
 
-      {/* Fraud Rate Overview */}
       <div className="md:col-span-2 lg:col-span-2 rounded-2xl bg-white border border-gray-200 p-6 shadow-sm relative">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center">
@@ -256,7 +250,6 @@ export default function DashboardContent() {
         </div>
       </div>
 
-      {/* Model Performance Metrics */}
       <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm relative">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center">
@@ -271,7 +264,6 @@ export default function DashboardContent() {
           ROC-AUC Score
         </div>
         
-        {/* Performance Indicators */}
         <div className="space-y-3">
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-600">Precision</span>
@@ -299,7 +291,6 @@ export default function DashboardContent() {
         </div>
       </div>
 
-      {/* Feature Importance */}
       <div className="md:col-span-2 lg:col-span-2 rounded-2xl bg-white border border-gray-200 p-6 shadow-sm relative">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center">
@@ -342,7 +333,6 @@ export default function DashboardContent() {
         </div>
       </div>
 
-      {/* Detection Statistics */}
       <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm relative">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center">

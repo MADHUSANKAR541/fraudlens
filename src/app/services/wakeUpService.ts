@@ -1,5 +1,3 @@
-// Wake-up service to prevent backend from sleeping on Render.com
-// This service automatically pings the backend when the frontend loads
 
 class WakeUpService {
   private backendUrl: string;
@@ -11,7 +9,6 @@ class WakeUpService {
     this.backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://npn-kh8l.onrender.com';
   }
 
-  // Wake up the backend by calling the /docs endpoint
   async wakeUpBackend(): Promise<boolean> {
     if (this.isWakingUp) {
       return false; // Already waking up
@@ -20,7 +17,6 @@ class WakeUpService {
     this.isWakingUp = true;
 
     try {
-      // Try multiple endpoints to ensure the backend wakes up
       const endpoints = ['/docs', '/health', '/'];
       
       for (const endpoint of endpoints) {
@@ -30,7 +26,6 @@ class WakeUpService {
             headers: {
               'Accept': 'text/html,application/json',
             },
-            // Add a timeout to prevent hanging
             signal: AbortSignal.timeout(10000), // 10 second timeout
           });
 
@@ -41,7 +36,6 @@ class WakeUpService {
           }
         } catch (error) {
           console.warn(`⚠️ Failed to wake up backend via ${endpoint}:`, error);
-          // Continue to next endpoint
         }
       }
 
@@ -56,7 +50,6 @@ class WakeUpService {
     }
   }
 
-  // Start periodic wake-up calls to keep backend alive
   startPeriodicWakeUp(): void {
     if (this.wakeUpInterval) {
       return; // Already started
@@ -68,11 +61,9 @@ class WakeUpService {
       await this.wakeUpBackend();
     }, this.WAKE_UP_INTERVAL);
 
-    // Also wake up immediately
     this.wakeUpBackend();
   }
 
-  // Stop periodic wake-up calls
   stopPeriodicWakeUp(): void {
     if (this.wakeUpInterval) {
       clearInterval(this.wakeUpInterval);
@@ -81,18 +72,14 @@ class WakeUpService {
     }
   }
 
-  // Wake up backend and start periodic calls
   async initialize(): Promise<void> {
     console.log('🚀 Initializing backend wake-up service...');
     
-    // Wake up immediately
     await this.wakeUpBackend();
     
-    // Start periodic wake-up
     this.startPeriodicWakeUp();
   }
 
-  // Check if backend is responsive
   async checkBackendHealth(): Promise<boolean> {
     try {
       const response = await fetch(`${this.backendUrl}/health`, {
@@ -107,12 +94,10 @@ class WakeUpService {
     }
   }
 
-  // Get backend URL
   getBackendUrl(): string {
     return this.backendUrl;
   }
 }
 
-// Export singleton instance
 export const wakeUpService = new WakeUpService();
 export default wakeUpService;

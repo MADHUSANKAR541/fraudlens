@@ -40,7 +40,6 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.email = user.email;
         token.name = user.name;
-        // token.sub already contains user id
       }
       return token;
     },
@@ -48,7 +47,6 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.email = token.email as string | undefined;
         session.user.name = token.name as string | null | undefined;
-        // @ts-expect-error add id from token.sub
         session.user.id = token.sub;
       }
       return session;

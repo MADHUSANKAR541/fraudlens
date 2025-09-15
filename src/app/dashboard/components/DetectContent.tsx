@@ -62,20 +62,17 @@ export default function DetectContent() {
   const [showModelMetrics, setShowModelMetrics] = useState(false);
   const [modelMetrics, setModelMetrics] = useState(DEFAULT_MODEL_METRICS);
 
-  // Load data: fetch transactions from Supabase, score via backend, and subscribe to changes
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
 
     const loadAndScore = async () => {
       try {
         setIsLoading(true);
-        // Load model metrics from backend
         const modelInfoResult = await backendService.getModelInfo();
         if (modelInfoResult.success && modelInfoResult.data) {
           setModelMetrics(modelInfoResult.data.metrics);
         }
 
-        // Fetch transactions (public rows: user_id null)
         const rows = await supabaseUploadService.fetchAll(null);
         const transactions = rows as unknown as TransactionData[];
 
@@ -85,7 +82,6 @@ export default function DetectContent() {
           return;
         }
 
-        // Score via backend
         const analyzed = await backendService.analyzeTransactions(transactions);
         if (analyzed.success && analyzed.data) {
           const preds = analyzed.data.predictions;
@@ -116,7 +112,6 @@ export default function DetectContent() {
               }
             };
           });
-          // setMlPredictions(preds); // optional
           setResults(mapped);
         } else {
           setResults([]);
@@ -130,7 +125,6 @@ export default function DetectContent() {
 
     loadAndScore();
 
-    // Subscribe to Supabase changes for live refresh
     supabaseUploadService.subscribe(null, () => {
       loadAndScore();
     }).then((unsub) => {
@@ -142,11 +136,9 @@ export default function DetectContent() {
     };
   }, []);
 
-  // Filter and search logic
   useEffect(() => {
     let filtered = results;
 
-    // Search filter
     if (searchTerm) {
       filtered = filtered.filter(result =>
         result.transactionId.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -156,17 +148,14 @@ export default function DetectContent() {
       );
     }
 
-    // Risk level filter
     if (selectedRisk !== 'all') {
       filtered = filtered.filter(result => result.riskLevel === selectedRisk);
     }
 
-    // Status filter
     if (selectedStatus !== 'all') {
       filtered = filtered.filter(result => result.status === selectedStatus);
     }
 
-    // Sorting
     filtered.sort((a, b) => {
       let aValue: string | number, bValue: string | number;
       
@@ -250,7 +239,6 @@ export default function DetectContent() {
 
   const handleBulkAction = (action: string) => {
     console.log(`Bulk action: ${action} on items:`, selectedItems);
-    // Implement bulk actions here
   };
 
   if (isLoading) {
@@ -278,7 +266,6 @@ export default function DetectContent() {
 
   return (
     <div className="space-y-6">
-      {/* Model Performance Metrics */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -390,7 +377,6 @@ export default function DetectContent() {
         )}
       </motion.div>
 
-      {/* Summary Cards */}
       <motion.div 
         className="grid grid-cols-1 md:grid-cols-4 gap-6"
         initial={{ opacity: 0, y: 20 }}
@@ -452,7 +438,6 @@ export default function DetectContent() {
         </div>
       </motion.div>
 
-      {/* Filters and Search */}
       <motion.div 
         className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6"
         initial={{ opacity: 0, y: 20 }}
@@ -461,7 +446,6 @@ export default function DetectContent() {
       >
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-            {/* Search */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
@@ -473,7 +457,6 @@ export default function DetectContent() {
               />
             </div>
 
-            {/* Risk Level Filter */}
             <select
               value={selectedRisk}
               onChange={(e) => setSelectedRisk(e.target.value)}
@@ -485,7 +468,6 @@ export default function DetectContent() {
               <option value="low">Low Risk</option>
             </select>
 
-            {/* Status Filter */}
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
@@ -500,7 +482,6 @@ export default function DetectContent() {
           </div>
 
           <div className="flex items-center space-x-4">
-            {/* Sort */}
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
@@ -526,7 +507,6 @@ export default function DetectContent() {
         </div>
       </motion.div>
 
-      {/* Bulk Actions */}
       {selectedItems.length > 0 && (
         <motion.div 
           className="bg-blue-50 border border-blue-200 rounded-xl p-4"
@@ -562,7 +542,6 @@ export default function DetectContent() {
         </motion.div>
       )}
 
-      {/* Results Table */}
       <motion.div 
         className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
         initial={{ opacity: 0, y: 20 }}

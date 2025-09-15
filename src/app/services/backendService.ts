@@ -1,10 +1,6 @@
-// Backend service that integrates with the FastAPI backend
 import { TransactionData, FraudPrediction, ModelMetrics } from './fraudDetectionService';
 
-// This service provides a bridge between the frontend and the FastAPI backend
-// All data comes from real API calls to the backend
 
-// Backend response format (snake_case)
 interface BackendFraudPrediction {
   is_fraud: boolean;
   fraud_probability: number;
@@ -53,12 +49,10 @@ class BackendService {
   private backendUrl: string;
 
   constructor() {
-    // Check if we're in development mode and backend is available
     this.backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://npn-kh8l.onrender.com';
     this.checkBackendHealth();
   }
 
-  // Transform backend response to frontend format
   private transformBackendResponse(backendResponse: BackendResponse, originalData?: TransactionData[]): BackendFraudResponse {
     const transformedPredictions = backendResponse.predictions.map((pred, index) => ({
       isFraud: pred.is_fraud,
@@ -89,7 +83,6 @@ class BackendService {
   private async checkBackendHealth(): Promise<void> {
     try {
       console.log('Checking backend health at:', `${this.backendUrl}/health`);
-      // Try to ping the FastAPI backend
       const response = await fetch(`${this.backendUrl}/health`, {
         method: 'GET',
         headers: {
@@ -112,7 +105,6 @@ class BackendService {
     }
   }
 
-  // Call the real backend API for batch prediction
   private async callBackendPrediction(
     data: TransactionData[]
   ): Promise<BackendFraudResponse> {
@@ -139,7 +131,6 @@ class BackendService {
     return this.transformBackendResponse(backendResult, data);
   }
 
-  // Upload and analyze CSV file
   async uploadAndAnalyze(file: File): Promise<{
     success: boolean;
     data?: BackendFraudResponse;
@@ -164,7 +155,6 @@ class BackendService {
 
       const uploadResult = await response.json();
       
-      // The upload endpoint returns { filename, file_size, results: BackendResponse }
       if (uploadResult.results) {
         const transformedResult = this.transformBackendResponse(uploadResult.results);
         return {
@@ -183,7 +173,6 @@ class BackendService {
     }
   }
 
-  // Analyze transaction data
   async analyzeTransactions(data: TransactionData[]): Promise<{
     success: boolean;
     data?: BackendFraudResponse;
@@ -204,7 +193,6 @@ class BackendService {
     }
   }
 
-  // Get model information
   async getModelInfo(): Promise<{
     success: boolean;
     data?: BackendModelInfo;
@@ -241,7 +229,6 @@ class BackendService {
     }
   }
 
-  // Get fraud statistics
   async getFraudStats(): Promise<{
     success: boolean;
     data?: {
@@ -285,18 +272,15 @@ class BackendService {
     }
   }
 
-  // Check if backend is available
   isAvailable(): boolean {
     return this.isBackendAvailable;
   }
 
-  // Manually trigger health check
   async checkHealth(): Promise<boolean> {
     await this.checkBackendHealth();
     return this.isBackendAvailable;
   }
 
-  // Generate LLM explanation for a specific transaction
   async generateExplanation(transactionData: TransactionData, prediction: FraudPrediction): Promise<{
     success: boolean;
     data?: { explanation: string; processing_time: number };
@@ -312,7 +296,6 @@ class BackendService {
         throw new Error('Backend is not available. Please ensure the FastAPI server is running.');
       }
 
-      // Transform prediction to backend format (snake_case)
       const backendPrediction = {
         is_fraud: prediction.isFraud,
         fraud_probability: prediction.fraudProbability,
@@ -360,12 +343,10 @@ class BackendService {
     }
   }
 
-  // Get backend URL
   getBackendUrl(): string {
     return this.backendUrl;
   }
 }
 
-// Export singleton instance
 export const backendService = new BackendService();
 export default backendService;

@@ -35,10 +35,8 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-40 w-64 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 bg-white border-r border-gray-200`}>
         <div className="h-full p-6 flex flex-col gap-6">
-          {/* Close button (mobile only) */}
           <button 
             className="lg:hidden self-end p-2 rounded-lg hover:bg-gray-100"
             aria-label="Close sidebar"
@@ -46,7 +44,6 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
           >
             <X className="w-5 h-5 text-gray-700" />
           </button>
-          {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
               <div className="w-4 h-4 bg-white rounded-sm opacity-90"></div>
@@ -54,7 +51,6 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
             <span className="font-bold text-xl text-gray-900">FraudLens</span>
           </div>
 
-          {/* User Welcome Card */}
           <div className="bg-gray-50 rounded-2xl p-4 relative">
             <div className="flex items-start mb-3">
               <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
@@ -65,7 +61,6 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
             <div className="text-lg font-bold text-gray-900">Welcome back, {session?.user?.name || session?.user?.email || 'there'}!</div>
           </div>
 
-          {/* Navigation */}
           <nav className="space-y-2">
             {navigationItems.map((item) => {
               const IconComponent = item.icon;
@@ -88,7 +83,6 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
             })}
           </nav>
 
-          {/* Sign out Button (moved here) */}
           <div className="mt-auto">
             <button 
               className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl p-4 flex items-center gap-3 hover:from-blue-700 hover:to-blue-800 transition-all"
@@ -104,9 +98,7 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
         </div>
       </aside>
 
-      {/* Main */}
       <div className="lg:ml-64">
-        {/* Top bar */}
         <header className="sticky top-0 z-30 bg-white border-b border-gray-200">
           <div className="h-16 px-6 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -130,12 +122,10 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
               <div className="ml-2 text-sm text-gray-600 hidden sm:block">
                 {session?.user?.email}
               </div>
-              {/* Removed sign out button from top bar */}
             </div>
           </div>
         </header>
 
-        {/* Content */}
         <main className="p-4 sm:p-6 max-w-7xl mx-auto">
           {children}
         </main>

@@ -45,9 +45,7 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
   const [showRequirements, setShowRequirements] = useState(false);
   const [persistToast, setPersistToast] = useState<string | null>(null);
   
-  // Get session data hook
   const { updateWithRealData, sessionInfo } = useSessionData();
-  // Using Supabase without Supabase Auth: store with user_id = null
   const userId = null;
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -61,7 +59,6 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
     setUploadedFiles(prev => [...prev, ...newFiles]);
     setIsUploading(true);
 
-    // Simulate upload progress
     newFiles.forEach(fileObj => {
       const interval = setInterval(() => {
         setUploadedFiles(prev => 
@@ -112,18 +109,15 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
     setIsProcessing(true);
     
     try {
-      // Process the first uploaded file
       const fileToProcess = uploadedFiles.find(f => f.status === 'success');
       
       if (!fileToProcess) {
         throw new Error('No files uploaded. Please upload a CSV file first.');
       }
 
-      // Use backend service to process the file
       const result = await backendService.uploadAndAnalyze(fileToProcess.file);
       
       if (result.success && result.data) {
-        // Update session with real data
         updateWithRealData({
           predictions: result.data.predictions,
           modelMetrics: result.data.model_metrics,
@@ -132,7 +126,6 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
           fraudCount: result.data.fraud_count
         });
         
-        // Show success modal
         setResultInfo({
           totalRecords: result.data.total_records,
           fraudCount: result.data.fraud_count,
@@ -152,7 +145,6 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
   };
 
   const downloadSample = () => {
-    // Create a sample CSV with the correct headers based on TransactionData interface
     const headers = [
       'customer_age', 'income', 'name_email_similarity',
       'prev_address_months_count', 'current_address_months_count',
@@ -261,7 +253,6 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-      {/* Upload Section */}
       <div className="md:col-span-2">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -282,7 +273,6 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
               )}
             </div>
 
-            {/* Dropzone */}
             <div
               {...getRootProps()}
               className={`border-2 border-dashed rounded-2xl p-6 sm:p-10 md:p-12 text-center cursor-pointer transition-all duration-200 ${
@@ -311,7 +301,6 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
               </motion.div>
             </div>
 
-            {/* File Requirements - Toggle Button (kept below upload box on mobile) */}
             <div className="mt-6 sm:mt-8 flex sm:justify-end">
               <button
                 type="button"
@@ -359,7 +348,6 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
           </div>
         </motion.div>
 
-        {/* Uploaded Files */}
         <AnimatePresence>
           {uploadedFiles.length > 0 && (
             <motion.div
@@ -425,9 +413,7 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
         </AnimatePresence>
       </div>
 
-      {/* Sidebar */}
       <div className="space-y-6">
-        {/* Quick Actions */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -488,7 +474,6 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
           </div>
         </motion.div>
 
-        {/* Upload Statistics */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -523,7 +508,6 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
         </motion.div>
       </div>
 
-      {/* Success Modal */}
       {showResultModal && resultInfo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/40" onClick={() => setShowResultModal(false)}></div>
@@ -568,7 +552,6 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
         </div>
       )}
 
-      {/* Error Modal */}
       {showErrorModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/40" onClick={() => setShowErrorModal(false)}></div>
@@ -592,7 +575,6 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
         </div>
       )}
 
-      {/* Persist Toast */}
       {persistToast && (
         <div className="fixed bottom-4 right-4 z-50">
           <div className="px-4 py-3 rounded-lg shadow-lg bg-gray-900 text-white text-sm">

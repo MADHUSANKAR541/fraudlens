@@ -32,7 +32,6 @@ export function useSessionData() {
   const [sessionInfo, setSessionInfo] = useState<SessionInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load initial data
   useEffect(() => {
     const loadData = () => {
       try {
@@ -51,7 +50,6 @@ export function useSessionData() {
     loadData();
   }, []);
 
-  // Update with real upload data
   const updateWithRealData = useCallback((realData: DashboardData) => {
     try {
       sessionService.updateWithRealData(realData);
@@ -62,7 +60,6 @@ export function useSessionData() {
     }
   }, []);
 
-  // Reset to mock data
   const resetToMockData = useCallback(() => {
     try {
       sessionService.resetToMockData();
@@ -76,7 +73,6 @@ export function useSessionData() {
     }
   }, []);
 
-  // Refresh mock data
   const refreshMockData = useCallback(() => {
     try {
       sessionService.refreshMockData();
@@ -90,7 +86,6 @@ export function useSessionData() {
     }
   }, []);
 
-  // Clear all session data
   const clearSession = useCallback(() => {
     try {
       sessionService.clearSession();
@@ -104,7 +99,6 @@ export function useSessionData() {
     }
   }, []);
 
-  // Check if showing real data
   const isShowingRealData = useCallback(() => {
     return sessionService.isShowingRealData();
   }, []);
