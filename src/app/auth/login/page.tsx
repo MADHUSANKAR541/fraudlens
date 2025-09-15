@@ -16,7 +16,6 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState(0);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -25,18 +24,7 @@ const LoginPage: React.FC = () => {
       [name]: value
     }));
 
-    if (name === 'password') {
-      calculatePasswordStrength(value);
-    }
-  };
-
-  const calculatePasswordStrength = (password: string) => {
-    let strength = 0;
-    if (password.length >= 8) strength += 25;
-    if (/[A-Z]/.test(password)) strength += 25;
-    if (/[a-z]/.test(password)) strength += 25;
-    if (/[0-9]/.test(password)) strength += 25;
-    setPasswordStrength(strength);
+    
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,19 +42,7 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const getPasswordStrengthColor = () => {
-    if (passwordStrength < 25) return 'bg-red-500';
-    if (passwordStrength < 50) return 'bg-orange-500';
-    if (passwordStrength < 75) return 'bg-yellow-500';
-    return 'bg-green-500';
-  };
 
-  const getPasswordStrengthText = () => {
-    if (passwordStrength < 25) return 'Weak';
-    if (passwordStrength < 50) return 'Fair';
-    if (passwordStrength < 75) return 'Good';
-    return 'Strong';
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50 flex items-center justify-center p-4 sm:p-6">
@@ -158,24 +134,7 @@ const LoginPage: React.FC = () => {
                   </button>
                 </div>
 
-                {formData.password && (
-                  <motion.div 
-                    className="mt-2"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor()}`}
-                          style={{ width: `${passwordStrength}%` }}
-                        />
-                      </div>
-                      <span className="text-xs text-gray-600">{getPasswordStrengthText()}</span>
-                    </div>
-                  </motion.div>
-                )}
+                
               </motion.div>
 
               <motion.div 
@@ -195,12 +154,7 @@ const LoginPage: React.FC = () => {
                     Remember me
                   </label>
                 </div>
-                <Link 
-                  href="/forgot-password" 
-                  className="text-sm text-blue-600 hover:text-blue-500 transition-colors"
-                >
-                  Forgot password?
-                </Link>
+                
               </motion.div>
 
               <motion.button
