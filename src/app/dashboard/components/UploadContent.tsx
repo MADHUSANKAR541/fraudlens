@@ -20,6 +20,7 @@ import {
 import { FraudPrediction, TransactionData } from '../../services/fraudDetectionService';
 import { backendService } from '../../services/backendService';
 import { useSessionData } from '../../hooks/useSessionData';
+import { supabaseUploadService } from '../../services/supabaseUploadService';
 
 interface UploadedFile {
   id: string;
@@ -41,9 +42,13 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
   const [showResultModal, setShowResultModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showRequirements, setShowRequirements] = useState(false);
+  const [persistToast, setPersistToast] = useState<string | null>(null);
   
   // Get session data hook
   const { updateWithRealData, sessionInfo } = useSessionData();
+  // Using Supabase without Supabase Auth: store with user_id = null
+  const userId = null;
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const newFiles: UploadedFile[] = acceptedFiles.map(file => ({
@@ -172,6 +177,62 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
     window.URL.revokeObjectURL(url);
   };
 
+  const parseTextCsv = (text: string): TransactionData[] => {
+    const [headerLine, ...lines] = text.split(/\r?\n/).filter(Boolean);
+    const headers = headerLine.split(',').map(h => h.trim());
+    return lines.map(line => {
+      const values = line.split(',');
+      const obj: Record<string, string | number> = {};
+      headers.forEach((h, i) => {
+        const v = values[i];
+        const num = v !== undefined && v !== '' && !isNaN(Number(v)) ? Number(v) : v;
+        obj[h] = num;
+      });
+      return obj as unknown as TransactionData;
+    });
+  };
+
+  const readFileAsText = (file: File) => new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.readAsText(file);
+  });
+
+  const persistToSupabase = async (mode: 'replace' | 'sync') => {
+    const fileToUse = uploadedFiles.find(f => f.status === 'success');
+    if (!fileToUse) {
+      setErrorMessage('No uploaded file to persist');
+      setShowErrorModal(true);
+      return;
+    }
+    try {
+      const text = await readFileAsText(fileToUse.file);
+      let rows: TransactionData[] = [];
+      const name = fileToUse.file.name.toLowerCase();
+      if (name.endsWith('.json')) {
+        const parsed = JSON.parse(text);
+        rows = Array.isArray(parsed) ? parsed : parsed?.transactions || [];
+      } else {
+        rows = parseTextCsv(text);
+      }
+      if (!rows.length) throw new Error('Parsed zero rows');
+
+      if (mode === 'replace') {
+        await supabaseUploadService.replaceAll(userId, rows as unknown as never);
+        setPersistToast('Replaced database with this upload');
+      } else {
+        await supabaseUploadService.upsert(userId, rows as unknown as never);
+        setPersistToast('Synced upload with existing database');
+      }
+      setTimeout(() => setPersistToast(null), 2500);
+    } catch (e) {
+      console.error('Persist error', e);
+      setErrorMessage(e instanceof Error ? e.message : 'Failed to save to database');
+      setShowErrorModal(true);
+    }
+  };
+
   const getFileIcon = (fileName: string) => {
     const extension = fileName.split('.').pop()?.toLowerCase();
     switch (extension) {
@@ -250,28 +311,51 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
               </motion.div>
             </div>
 
-            {/* File Requirements */}
-            <div className="mt-8 p-6 bg-blue-50 rounded-xl">
-              <h4 className="font-semibold text-blue-900 mb-3">File Requirements</h4>
-              <ul className="space-y-2 text-sm text-blue-800">
-                <li className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4" />
-                  <span>Maximum file size: 100MB</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4" />
-                  <span>Supported formats: CSV, Excel (.xlsx, .xls), JSON</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4" />
-                  <span>Required columns: transaction_id, amount, timestamp, user_id</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4" />
-                  <span>Data should be in chronological order</span>
-                </li>
-              </ul>
+            {/* File Requirements - Toggle Button (kept below upload box on mobile) */}
+            <div className="mt-6 sm:mt-8 flex sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setShowRequirements(v => !v)}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100"
+              >
+                <AlertCircle className="w-4 h-4" />
+                <span className="text-sm font-medium">File requirements</span>
+              </button>
             </div>
+
+            <AnimatePresence initial={false}>
+              {showRequirements && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-4 p-6 bg-blue-50 rounded-xl">
+                    <h4 className="font-semibold text-blue-900 mb-3">File Requirements</h4>
+                    <ul className="space-y-2 text-sm text-blue-800">
+                      <li className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4" />
+                        <span>Maximum file size: 100MB</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4" />
+                        <span>Supported formats: CSV, Excel (.xlsx, .xls), JSON</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4" />
+                        <span>Required columns: transaction_id, amount, timestamp, user_id</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4" />
+                        <span>Data should be in chronological order</span>
+                      </li>
+                    </ul>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
 
@@ -361,6 +445,22 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
               <span className="text-sm font-medium">
                 {isProcessing ? 'Processing...' : 'Run Fraud Detection'}
               </span>
+            </button>
+            <button 
+              onClick={() => persistToSupabase('replace')}
+              disabled={uploadedFiles.filter(f => f.status === 'success').length === 0}
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <RefreshCw className="w-5 h-5" />
+              <span className="text-sm font-medium">Replace DB with this upload</span>
+            </button>
+            <button 
+              onClick={() => persistToSupabase('sync')}
+              disabled={uploadedFiles.filter(f => f.status === 'success').length === 0}
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <RefreshCw className="w-5 h-5" />
+              <span className="text-sm font-medium">Sync with existing DB data</span>
             </button>
             <button 
               onClick={downloadSample}
@@ -488,6 +588,15 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
                 Got it
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Persist Toast */}
+      {persistToast && (
+        <div className="fixed bottom-4 right-4 z-50">
+          <div className="px-4 py-3 rounded-lg shadow-lg bg-gray-900 text-white text-sm">
+            {persistToast}
           </div>
         </div>
       )}

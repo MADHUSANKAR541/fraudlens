@@ -12,7 +12,8 @@ import {
   Calendar,
   Grid3X3,
   Star,
-  X
+  X,
+  Plus
 } from 'lucide-react';
 
 interface DashboardLayoutProps {
@@ -60,8 +61,8 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
                 <Users className="w-5 h-5 text-gray-600" />
               </div>
             </div>
-            <div className="text-xs text-gray-500 mb-1">MONDAY, MARCH 24</div>
-            <div className="text-lg font-bold text-gray-900">Welcome back, George!</div>
+            <div className="text-xs text-gray-500 mb-1">{new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+            <div className="text-lg font-bold text-gray-900">Welcome back, {session?.user?.name || session?.user?.email || 'there'}!</div>
           </div>
 
           {/* Navigation */}
@@ -87,13 +88,16 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
             })}
           </nav>
 
-          {/* Pro Button */}
+          {/* Sign out Button (moved here) */}
           <div className="mt-auto">
-            <button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl p-4 flex items-center gap-3 hover:from-blue-700 hover:to-blue-800 transition-all">
+            <button 
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl p-4 flex items-center gap-3 hover:from-blue-700 hover:to-blue-800 transition-all"
+              onClick={() => signOut({ callbackUrl: '/auth/login' })}
+            >
               <Star className="w-5 h-5" />
               <div className="text-left">
-                <div className="font-semibold">FraudLens Pro</div>
-                <div className="text-sm opacity-90">AI-powered finance</div>
+                <div className="font-semibold">Sign out</div>
+                <div className="text-sm opacity-90">Return to login</div>
               </div>
             </button>
           </div>
@@ -109,29 +113,24 @@ export default function DashboardLayout({ children, currentPage, onPageChange }:
               <button className="lg:hidden p-2 rounded-lg hover:bg-gray-100" onClick={() => setSidebarOpen(true)}>
                 <Menu className="w-5 h-5 text-gray-700" />
               </button>
-              <button className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
+              <button className="inline-flex items-center gap-2 h-10 px-3 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium">
                 <Calendar className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-medium">This Month</span>
+                <span>This Month</span>
               </button>
             </div>
             <div className="flex items-center gap-3">
-              <button className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50">
+              <button className="inline-flex items-center gap-2 h-10 px-3 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium">
                 <Grid3X3 className="w-4 h-4 text-gray-500" />
-                <span className="text-sm">Manage</span>
+                <span>Manage</span>
               </button>
-              <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+              <button className="inline-flex items-center gap-2 h-10 px-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 text-sm font-medium">
                 <Plus className="w-4 h-4" />
-                <span className="text-sm">Add Widget</span>
+                <span>Add Widget</span>
               </button>
               <div className="ml-2 text-sm text-gray-600 hidden sm:block">
                 {session?.user?.email}
               </div>
-              <button
-                className="px-3 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm"
-                onClick={() => signOut({ callbackUrl: '/auth/login' })}
-              >
-                Sign out
-              </button>
+              {/* Removed sign out button from top bar */}
             </div>
           </div>
         </header>
