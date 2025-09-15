@@ -2,8 +2,10 @@
 @import "./theme.scss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #0D1B2A;
+  --background: #eaf8f4; /* light mint */
+  --foreground: #0f172a; /* slate-900 */
+  --accent: #14b8a6; /* teal-500 */
+  --accent-2: #38bdf8; /* sky-400 */
 }
 
 @theme inline {
@@ -15,8 +17,10 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0D1B2A;
-    --foreground: #ffffff;
+    --background: #0b1220; /* deep navy */
+    --foreground: #e6f6f2; /* mint-tinted white */
+    --accent: #2dd4bf; /* teal-400 */
+    --accent-2: #38bdf8; /* sky-400 */
   }
 }
 
@@ -35,14 +39,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-gray-100);
+  background: rgba(2, 6, 23, 0.06);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-gray-400);
+  background: rgba(20, 184, 166, 0.5); /* teal */
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-500);
+  background: rgba(13, 148, 136, 0.7);
 }
