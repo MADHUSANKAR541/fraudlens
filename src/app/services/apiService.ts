@@ -1,7 +1,7 @@
 // API service for communicating with the backend fraud detection system
 import { TransactionData, FraudPrediction, ModelMetrics } from './fraudDetectionService';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8501';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://npn-kh8l.onrender.com';
 
 export interface BackendResponse<T> {
   success: boolean;

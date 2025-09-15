@@ -54,7 +54,7 @@ class BackendService {
 
   constructor() {
     // Check if we're in development mode and backend is available
-    this.backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
+    this.backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://npn-kh8l.onrender.com';
     this.checkBackendHealth();
   }
 

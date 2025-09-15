@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Lock, Mail, ArrowRight, Shield } from 'lucide-react';
 import Mascot from '../Mascot';
 
@@ -11,6 +13,7 @@ const LoginPage: React.FC = () => {
     email: '',
     password: '',
   });
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
@@ -36,10 +39,20 @@ const LoginPage: React.FC = () => {
     setPasswordStrength(strength);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login attempt:', formData);
+    const result = await signIn('credentials', {
+      email: formData.email,
+      password: formData.password,
+      redirect: false,
+    });
+
+    if (result && !result.error) {
+      router.push('/dashboard');
+    } else {
+      // eslint-disable-next-line no-console
+      console.error('Login failed:', result?.error);
+    }
   };
 
   const getPasswordStrengthColor = () => {

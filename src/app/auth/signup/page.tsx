@@ -42,10 +42,30 @@ const SignupPage: React.FC = () => {
     setPasswordStrength(strength);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log('Signup attempt:', formData);
+    try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password
+        })
+      });
+      if (!res.ok) {
+        // eslint-disable-next-line no-console
+        console.error('Signup failed');
+        return;
+      }
+      // Optionally auto sign-in or redirect
+      window.location.href = '/auth/login';
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err);
+    }
   };
 
   const getPasswordStrengthColor = () => {
