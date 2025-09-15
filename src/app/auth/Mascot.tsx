@@ -6,9 +6,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface MascotProps {
   isPasswordFocused?: boolean;
   className?: string;
+  compact?: boolean;
+  gazeX?: number; // 0 (left) to 1 (right)
 }
 
-const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = '' }) => {
+const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = '', compact = false, gazeX = 0.5 }) => {
   const [isBlinking, setIsBlinking] = useState(false);
   const [isEyesClosed, setIsEyesClosed] = useState(false);
 
@@ -33,8 +35,13 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
     }
   }, [isPasswordFocused]);
 
+  // Compute pupil offsets based on gazeX (clamped)
+  const clampedGaze = Math.max(0, Math.min(1, gazeX));
+  const pupilOffsetX = (clampedGaze - 0.5) * 6; // +/- 3px range
+  const highlightOffsetX = (clampedGaze - 0.5) * 2.5;
+
   return (
-    <div className={`mascot-container ${className}`}>
+    <div className={`mascot-container ${compact ? 'compact' : ''} ${className}`}>
       <motion.div
         className="mascot"
         initial={{ scale: 0.8, opacity: 0 }}
@@ -141,7 +148,7 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
                   transition={{ delay: 0.5, duration: 0.2 }}
                 />
                 <motion.circle
-                  cx="50"
+                  cx={50 + pupilOffsetX}
                   cy="45"
                   r="4"
                   fill="#0D1B2A"
@@ -150,7 +157,7 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
                   transition={{ delay: 0.6, duration: 0.2 }}
                 />
                 <motion.circle
-                  cx="51"
+                  cx={51 + highlightOffsetX}
                   cy="43"
                   r="1.5"
                   fill="white"
@@ -171,7 +178,7 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
                   transition={{ delay: 0.5, duration: 0.2 }}
                 />
                 <motion.circle
-                  cx="70"
+                  cx={70 + pupilOffsetX}
                   cy="45"
                   r="4"
                   fill="#0D1B2A"
@@ -180,7 +187,7 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
                   transition={{ delay: 0.6, duration: 0.2 }}
                 />
                 <motion.circle
-                  cx="71"
+                  cx={71 + highlightOffsetX}
                   cy="43"
                   r="1.5"
                   fill="white"
@@ -361,6 +368,10 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
           position: relative;
           padding: 2rem;
         }
+        .mascot-container.compact {
+          padding-top: 0;
+          padding-bottom: 0;
+        }
         
         .mascot {
           position: relative;
@@ -393,6 +404,10 @@ const Mascot: React.FC<MascotProps> = ({ isPasswordFocused = false, className = 
         @media (max-width: 768px) {
           .mascot-container {
             padding: 1rem;
+          }
+          .mascot-container.compact {
+            padding-top: 0;
+            padding-bottom: 0;
           }
           
           .mascot-svg {

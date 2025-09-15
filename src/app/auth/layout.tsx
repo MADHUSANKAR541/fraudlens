@@ -19,10 +19,8 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className}>
-      <body className="antialiased">
-        {children}
-      </body>
-    </html>
+    <div className={inter.className}>
+      {children}
+    </div>
   );
 }

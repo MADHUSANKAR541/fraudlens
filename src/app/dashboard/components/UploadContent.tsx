@@ -37,6 +37,10 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [, setIsUploading] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [resultInfo, setResultInfo] = useState<{ totalRecords: number; fraudCount: number; processingTime: number } | null>(null);
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showErrorModal, setShowErrorModal] = useState(false);
   
   // Get session data hook
   const { updateWithRealData, sessionInfo } = useSessionData();
@@ -123,14 +127,20 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
           fraudCount: result.data.fraud_count
         });
         
-        // Show success message
-        alert(`✅ Successfully processed ${result.data.total_records} transactions! Go to the AI page to view detailed analysis and generate explanations.`);
+        // Show success modal
+        setResultInfo({
+          totalRecords: result.data.total_records,
+          fraudCount: result.data.fraud_count,
+          processingTime: result.data.processing_time
+        });
+        setShowResultModal(true);
       } else {
         throw new Error(result.error || 'Backend processing failed');
       }
     } catch (error) {
       console.error('Error processing files:', error);
-      alert(`Error processing file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setErrorMessage(error instanceof Error ? error.message : 'Unknown error');
+      setShowErrorModal(true);
     } finally {
       setIsProcessing(false);
     }
@@ -189,9 +199,9 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
       {/* Upload Section */}
-      <div className="lg:col-span-2">
+      <div className="md:col-span-2">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -214,7 +224,7 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
             {/* Dropzone */}
             <div
               {...getRootProps()}
-              className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-200 ${
+              className={`border-2 border-dashed rounded-2xl p-6 sm:p-10 md:p-12 text-center cursor-pointer transition-all duration-200 ${
                 isDragActive
                   ? 'border-blue-500 bg-blue-50'
                   : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
@@ -225,11 +235,11 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
                 animate={{ scale: isDragActive ? 1.05 : 1 }}
                 transition={{ duration: 0.2 }}
               >
-                <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <Upload className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
                   {isDragActive ? 'Drop files here' : 'Drag & drop files here'}
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-sm sm:text-base text-gray-600 mb-4">
                   or click to select files
                 </p>
                 <div className="flex flex-wrap justify-center gap-2 text-sm text-gray-500">
@@ -341,39 +351,39 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
           className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm"
         >
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <button 
               onClick={processFilesForFraudDetection}
               disabled={uploadedFiles.length === 0 || isProcessing}
-              className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Brain className="w-5 h-5 text-purple-600" />
-              <span className="text-sm font-medium text-gray-900">
+              <Brain className="w-5 h-5" />
+              <span className="text-sm font-medium">
                 {isProcessing ? 'Processing...' : 'Run Fraud Detection'}
               </span>
             </button>
             <button 
               onClick={downloadSample}
-              className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-amber-500 text-white hover:bg-amber-600 transition-colors"
             >
-              <Download className="w-5 h-5 text-blue-600" />
-              <span className="text-sm font-medium text-gray-900">Download Sample</span>
+              <Download className="w-5 h-5" />
+              <span className="text-sm font-medium">Download Sample</span>
             </button>
             <button 
               onClick={onNavigateToAI}
-              className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors"
             >
-              <Eye className="w-5 h-5 text-green-600" />
-              <span className="text-sm font-medium text-gray-900">View AI Analysis</span>
+              <Eye className="w-5 h-5" />
+              <span className="text-sm font-medium">View AI Analysis</span>
             </button>
             <button 
               onClick={() => {
                 setUploadedFiles([]);
               }}
-              className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
             >
-              <Trash2 className="w-5 h-5 text-red-600" />
-              <span className="text-sm font-medium text-gray-900">Clear All Files</span>
+              <Trash2 className="w-5 h-5" />
+              <span className="text-sm font-medium">Clear All Files</span>
             </button>
           </div>
         </motion.div>
@@ -412,6 +422,75 @@ export default function UploadContent({ onNavigateToAI }: UploadContentProps = {
           </div>
         </motion.div>
       </div>
+
+      {/* Success Modal */}
+      {showResultModal && resultInfo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setShowResultModal(false)}></div>
+          <div className="relative w-full max-w-md bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Fraud Detection Complete</h3>
+              <button className="p-2 rounded-lg hover:bg-gray-100" onClick={() => setShowResultModal(false)} aria-label="Close">
+                <X className="w-4 h-4 text-gray-600" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Total Records</span>
+                <span className="font-medium text-gray-900">{resultInfo.totalRecords}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Fraud Count</span>
+                <span className="font-medium text-red-600">{resultInfo.fraudCount}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Processing Time</span>
+                <span className="font-medium text-gray-900">{resultInfo.processingTime}s</span>
+              </div>
+            </div>
+            <div className="mt-6 flex flex-col sm:flex-row gap-2">
+              <button
+                onClick={() => setShowResultModal(false)}
+                className="w-full sm:w-auto px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+              >
+                Close
+              </button>
+              {onNavigateToAI && (
+                <button
+                  onClick={() => { setShowResultModal(false); onNavigateToAI(); }}
+                  className="w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                >
+                  View AI Analysis
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Error Modal */}
+      {showErrorModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setShowErrorModal(false)}></div>
+          <div className="relative w-full max-w-md bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Processing Error</h3>
+              <button className="p-2 rounded-lg hover:bg-gray-100" onClick={() => setShowErrorModal(false)} aria-label="Close">
+                <X className="w-4 h-4 text-gray-600" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-700">{errorMessage || 'An unexpected error occurred while processing the file.'}</p>
+            <div className="mt-6">
+              <button
+                onClick={() => setShowErrorModal(false)}
+                className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white hover:bg-gray-800"
+              >
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
