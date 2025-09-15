@@ -20,6 +20,22 @@ const SignupPage: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [gazeX, setGazeX] = useState(0.5);
+
+  const updateGazeFromTarget = (target: HTMLInputElement) => {
+    try {
+      const length = target?.value?.length ?? 0;
+      const caret = target?.selectionStart ?? length;
+      const ratio = length > 0 ? caret / length : 0.1;
+      setGazeX(Math.max(0, Math.min(1, ratio)));
+    } catch {
+      // noop
+    }
+  };
+
+  const handleCaretGaze = (e: React.SyntheticEvent<HTMLInputElement>) => {
+    updateGazeFromTarget(e.currentTarget);
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -30,6 +46,10 @@ const SignupPage: React.FC = () => {
 
     if (name === 'password') {
       calculatePasswordStrength(value);
+    }
+
+    if (type !== 'checkbox') {
+      updateGazeFromTarget(e.target as HTMLInputElement);
     }
   };
 
@@ -66,103 +86,41 @@ const SignupPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50 flex items-center justify-center p-4">
-      <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-        {/* Left Side - Mascot and Branding */}
+      <div className="w-full max-w-3xl flex items-center justify-center">
+        {/* Signup Form - Horizontal */}
         <motion.div 
-          className="hidden lg:flex flex-col items-center justify-center space-y-8"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="text-center">
-            <motion.div 
-              className="flex items-center justify-center space-x-3 mb-6"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            >
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-teal-600 rounded-xl flex items-center justify-center">
-                <Shield className="w-7 h-7 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold text-gray-900">FraudLens</h1>
-            </motion.div>
-            
-            <motion.h2 
-              className="text-2xl font-semibold text-gray-700 mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              Join FraudLens Today
-            </motion.h2>
-            
-            <motion.p 
-              className="text-gray-600 max-w-md"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              Start your free trial and experience the power of AI-driven fraud detection.
-            </motion.p>
-          </div>
-
-          {/* Mascot */}
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
-          >
-            <Mascot isPasswordFocused={isPasswordFocused} />
-          </motion.div>
-
-          {/* Benefits List */}
-          <motion.div 
-            className="space-y-4"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-          >
-            <div className="flex items-center space-x-3 text-gray-600">
-              <CheckCircle className="w-5 h-5 text-green-500" />
-              <span>14-day free trial</span>
-            </div>
-            <div className="flex items-center space-x-3 text-gray-600">
-              <CheckCircle className="w-5 h-5 text-green-500" />
-              <span>No credit card required</span>
-            </div>
-            <div className="flex items-center space-x-3 text-gray-600">
-              <CheckCircle className="w-5 h-5 text-green-500" />
-              <span>24/7 customer support</span>
-            </div>
-            <div className="flex items-center space-x-3 text-gray-600">
-              <CheckCircle className="w-5 h-5 text-green-500" />
-              <span>Cancel anytime</span>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* Right Side - Signup Form */}
-        <motion.div 
-          className="w-full max-w-md mx-auto"
+          className="w-full mx-auto"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border border-white/20">
             {/* Mobile Logo */}
-            <div className="lg:hidden flex items-center justify-center space-x-3 mb-8">
+            <div className="lg:hidden flex items-center justify-center space-x-3 mb-4">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg flex items-center justify-center">
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900">FraudLens</h1>
             </div>
 
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Create Account</h2>
-              <p className="text-gray-600">Start your free trial today</p>
+            {/* Header */}
+            <div className="text-center mb-2">
+              <h2 className="text-2xl font-bold text-gray-900 mb-1">Create Account</h2>
+              <p className="text-gray-600 text-sm">Start your free trial today</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Mascot directly under header */}
+            <motion.div 
+              className="flex justify-center mb-4"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Mascot isPasswordFocused={isPasswordFocused} compact gazeX={gazeX} />
+            </motion.div>
+
+            {/* Form fields */}
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Fields */}
               <motion.div 
                 className="grid grid-cols-2 gap-4"
@@ -185,6 +143,9 @@ const SignupPage: React.FC = () => {
                       required
                       value={formData.firstName}
                       onChange={handleInputChange}
+                      onClick={handleCaretGaze}
+                      onKeyUp={handleCaretGaze}
+                      onSelect={handleCaretGaze}
                       className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
                       placeholder="John"
                     />
@@ -201,6 +162,9 @@ const SignupPage: React.FC = () => {
                     required
                     value={formData.lastName}
                     onChange={handleInputChange}
+                    onClick={handleCaretGaze}
+                    onKeyUp={handleCaretGaze}
+                    onSelect={handleCaretGaze}
                     className="block w-full px-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
                     placeholder="Doe"
                   />
@@ -227,6 +191,9 @@ const SignupPage: React.FC = () => {
                     required
                     value={formData.email}
                     onChange={handleInputChange}
+                    onClick={handleCaretGaze}
+                    onKeyUp={handleCaretGaze}
+                    onSelect={handleCaretGaze}
                     className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
                     placeholder="john@company.com"
                   />
@@ -248,6 +215,9 @@ const SignupPage: React.FC = () => {
                   type="text"
                   value={formData.company}
                   onChange={handleInputChange}
+                  onClick={handleCaretGaze}
+                  onKeyUp={handleCaretGaze}
+                  onSelect={handleCaretGaze}
                   className="block w-full px-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
                   placeholder="Your Company"
                 />
@@ -275,6 +245,9 @@ const SignupPage: React.FC = () => {
                     onChange={handleInputChange}
                     onFocus={() => setIsPasswordFocused(true)}
                     onBlur={() => setIsPasswordFocused(false)}
+                    onClick={handleCaretGaze}
+                    onKeyUp={handleCaretGaze}
+                    onSelect={handleCaretGaze}
                     className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
                     placeholder="Create a strong password"
                   />
@@ -332,6 +305,9 @@ const SignupPage: React.FC = () => {
                     required
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
+                    onClick={handleCaretGaze}
+                    onKeyUp={handleCaretGaze}
+                    onSelect={handleCaretGaze}
                     className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
                     placeholder="Confirm your password"
                   />
@@ -417,7 +393,7 @@ const SignupPage: React.FC = () => {
 
             {/* Divider */}
             <motion.div 
-              className="mt-6"
+              className="mt-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.8 }}
@@ -434,7 +410,7 @@ const SignupPage: React.FC = () => {
 
             {/* Social Login Buttons */}
             <motion.div 
-              className="mt-6 grid grid-cols-2 gap-3"
+              className="mt-4 grid grid-cols-2 gap-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2 }}
@@ -458,7 +434,7 @@ const SignupPage: React.FC = () => {
 
             {/* Sign In Link */}
             <motion.div 
-              className="mt-6 text-center"
+              className="mt-4 text-center"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 2.2 }}
