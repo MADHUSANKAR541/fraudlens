@@ -70,77 +70,8 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50 flex items-center justify-center p-4">
-      <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-        {/* Left Side - Mascot and Branding */}
-        <motion.div 
-          className="hidden lg:flex flex-col items-center justify-center space-y-8"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="text-center">
-            <motion.div 
-              className="flex items-center justify-center space-x-3 mb-6"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            >
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-teal-600 rounded-xl flex items-center justify-center">
-                <Shield className="w-7 h-7 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold text-gray-900">FraudLens</h1>
-            </motion.div>
-            
-            <motion.h2 
-              className="text-2xl font-semibold text-gray-700 mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              Welcome Back
-            </motion.h2>
-            
-            <motion.p 
-              className="text-gray-600 max-w-md"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              Sign in to your account to access advanced fraud detection tools and analytics.
-            </motion.p>
-          </div>
-
-          {/* Mascot */}
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
-          >
-            <Mascot isPasswordFocused={isPasswordFocused} />
-          </motion.div>
-
-          {/* Features List */}
-          <motion.div 
-            className="space-y-4"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-          >
-            <div className="flex items-center space-x-3 text-gray-600">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>Real-time fraud detection</span>
-            </div>
-            <div className="flex items-center space-x-3 text-gray-600">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>Advanced analytics dashboard</span>
-            </div>
-            <div className="flex items-center space-x-3 text-gray-600">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>99.7% detection accuracy</span>
-            </div>
-          </motion.div>
-        </motion.div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50 flex items-center justify-center p-4 sm:p-6">
+      <div className="max-w-6xl w-full grid grid-cols-1 items-center">
 
         {/* Right Side - Login Form */}
         <motion.div 
@@ -149,18 +80,22 @@ const LoginPage: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20">
-            {/* Mobile Logo */}
-            <div className="lg:hidden flex items-center justify-center space-x-3 mb-8">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg flex items-center justify-center">
-                <Shield className="w-6 h-6 text-white" />
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 border border-white/20">
+            {/* Mascot inside the sign-in box */}
+            <motion.div
+              className="flex items-center justify-center mb-6"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+            >
+              <div className="w-24 h-24 sm:w-28 sm:h-28">
+                <Mascot isPasswordFocused={isPasswordFocused} />
               </div>
-              <h1 className="text-2xl font-bold text-gray-900">FraudLens</h1>
-            </div>
+            </motion.div>
 
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Sign In</h2>
-              <p className="text-gray-600">Enter your credentials to access your account</p>
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Sign In</h2>
+              <p className="text-sm sm:text-base text-gray-600">Enter your credentials to access your account</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -251,7 +186,7 @@ const LoginPage: React.FC = () => {
 
               {/* Remember Me & Forgot Password */}
               <motion.div 
-                className="flex items-center justify-between"
+                className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
@@ -309,7 +244,7 @@ const LoginPage: React.FC = () => {
 
             {/* Social Login Buttons */}
             <motion.div 
-              className="mt-6 grid grid-cols-2 gap-3"
+              className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.4 }}
