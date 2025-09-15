@@ -81,20 +81,16 @@ const LandingPage: React.FC = () => {
   ];
 
 
-  const teamMembers = Array.from({ length: 8 }).map((_, i) => ({
-    name: `Team Member ${i + 1}`,
-    role: [
-      "ML Engineer",
-      "Data Scientist",
-      "Full‑stack Engineer",
-      "Product Designer",
-      "Security Analyst",
-      "DevOps Engineer",
-      "PM",
-      "Researcher"
-    ][i],
-    photo: `/mascot-open.svg`
-  }));
+  const teamMembers = [
+    { name: 'Meganathan', role: 'AI & ML Engineer', photo: '/mascot-open.svg' },
+    { name: 'Nizam Aashiq', role: 'ML Engineer', photo: '/mascot-open.svg' },
+    { name: 'Priya Dharshini', role: 'Data Analyst', photo: '/mascot-open.svg' },
+    { name: 'Abhinaya', role: 'Data Analyst', photo: '/mascot-open.svg' },
+    { name: 'Shreen', role: 'Feature Engineering', photo: '/mascot-open.svg' },
+    { name: 'Jeba Priya', role: 'Model Validation', photo: '/mascot-open.svg' },
+    { name: 'Kavinmathi', role: 'Frontend', photo: '/mascot-open.svg' },
+    { name: 'Madhu Sankar', role: 'Backend & Deployment', photo: '/mascot-open.svg' }
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50">

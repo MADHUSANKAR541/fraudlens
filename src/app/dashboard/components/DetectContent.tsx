@@ -24,6 +24,7 @@ import {
 import { FraudPrediction, TransactionData, DEFAULT_MODEL_METRICS } from '../../services/fraudDetectionService';
 import { backendService } from '../../services/backendService';
 import { supabaseUploadService } from '../../services/supabaseUploadService';
+import type { StoredTransaction } from '../../services/supabaseUploadService';
 
 interface FraudResult {
   id: string;
@@ -50,6 +51,9 @@ interface FraudResult {
 
 export default function DetectContent() {
   const [results, setResults] = useState<FraudResult[]>([]);
+  const [storedTransactions, setStoredTransactions] = useState<StoredTransaction[]>([]);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
   const [filteredResults, setFilteredResults] = useState<FraudResult[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRisk, setSelectedRisk] = useState<string>('all');
@@ -74,6 +78,7 @@ export default function DetectContent() {
         }
 
         const rows = await supabaseUploadService.fetchAll(null);
+        setStoredTransactions(rows);
         const transactions = rows as unknown as TransactionData[];
 
       
@@ -97,6 +102,27 @@ export default function DetectContent() {
       if (unsubscribe) unsubscribe();
     };
   }, []);
+
+  const handleDeactivate = async (id?: string) => {
+    if (!id) return;
+    setDeletingIds(prev => new Set(prev).add(id));
+    try {
+      await supabaseUploadService.deleteById(id);
+      setStoredTransactions(prev => prev.filter(t => t.id !== id));
+      setToast({ message: 'Account deactivated', type: 'success' });
+      setTimeout(() => setToast(null), 2500);
+    } catch (e) {
+      console.error('Failed to deactivate transaction', e);
+      setToast({ message: 'Failed to deactivate', type: 'error' });
+      setTimeout(() => setToast(null), 3000);
+    } finally {
+      setDeletingIds(prev => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    }
+  };
 
   useEffect(() => {
     let filtered = results;
@@ -228,6 +254,22 @@ export default function DetectContent() {
 
   return (
     <div className="space-y-6">
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-lg shadow-md border ${
+              toast.type === 'success'
+                ? 'bg-green-50 text-green-800 border-green-200'
+                : 'bg-red-50 text-red-800 border-red-200'
+            }`}
+          >
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -337,6 +379,78 @@ export default function DetectContent() {
             </div>
           </motion.div>
         )}
+      </motion.div>
+
+      <motion.div
+        className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+            <User className="w-5 h-5 text-blue-600 mr-2" />
+            Accounts from Analyzed Data
+          </h3>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Proposed Limit</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Credit Risk</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device Fraud Cnt</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              <AnimatePresence>
+                {storedTransactions.map((t) => (
+                  <motion.tr
+                    key={t.id}
+                    initial={{ opacity: 1, x: 0 }}
+                    animate={{ opacity: deletingIds.has(t.id!) ? 0.5 : 1, x: deletingIds.has(t.id!) ? -20 : 0 }}
+                    exit={{ opacity: 0, x: -100, scale: 0.95 }}
+                    transition={{ duration: 0.3 }}
+                    className="hover:bg-gray-50"
+                  >
+                    <td className="px-6 py-3 text-sm text-gray-900">{t.id?.slice(0, 8)}</td>
+                    <td className="px-6 py-3 text-sm text-gray-900">{Number(t.proposed_credit_limit ?? 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                    <td className="px-6 py-3 text-sm text-gray-900">{t.credit_risk_score}</td>
+                    <td className="px-6 py-3 text-sm text-gray-900">{t.device_fraud_count}</td>
+                    <td className="px-6 py-3">
+                      <button
+                        onClick={() => handleDeactivate(t.id!)}
+                        disabled={deletingIds.has(t.id!)}
+                        className="inline-flex items-center px-3 py-1 rounded-lg bg-red-600 text-white text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {deletingIds.has(t.id!) ? (
+                          <>
+                            <motion.div
+                              className="w-3 h-3 border border-white border-t-transparent rounded-full mr-2"
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                            />
+                            Deleting...
+                          </>
+                        ) : (
+                          'Deactivate'
+                        )}
+                      </button>
+                    </td>
+                  </motion.tr>
+                ))}
+              </AnimatePresence>
+              {storedTransactions.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="px-6 py-6 text-center text-sm text-gray-600">No stored transactions</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </motion.div>
 
       <motion.div 

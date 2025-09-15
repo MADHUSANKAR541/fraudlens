@@ -65,6 +65,12 @@ export const supabaseUploadService = {
       : await query.is('user_id', null);
     if (error) throw error;
     return data as StoredTransaction[];
+  },
+
+  async deleteById(id: string) {
+    const { error } = await supabase.from(TABLE).delete().eq('id', id);
+    if (error) throw error;
+    return { success: true } as const;
   }
 };
 
